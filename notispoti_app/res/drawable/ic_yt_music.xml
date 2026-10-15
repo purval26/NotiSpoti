@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="36dp"
+    android:height="36dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- Red Squircle -->
+    <path
+        android:fillColor="#FF0000"
+        android:pathData="M 12,2 L 36,2 A 10,10 0 0,1 46,12 L 46,36 A 10,10 0 0,1 36,46 L 12,46 A 10,10 0 0,1 2,36 L 2,12 A 10,10 0 0,1 12,2 Z" />
+    <!-- White Circle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M24,12A12,12 0 1,1 24,36A12,12 0 1,1 24,12Z" />
+    <!-- Red Play Triangle -->
+    <path
+        android:fillColor="#FF0000"
+        android:pathData="M20,18v12l10,-6z" />
+</vector>

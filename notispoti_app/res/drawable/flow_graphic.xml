@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="110dp"
+    android:height="130dp"
+    android:viewportWidth="140"
+    android:viewportHeight="160">
+
+    <!-- Top Left: YouTube Music Red Squircle -->
+    <path
+        android:fillColor="#FF0000"
+        android:pathData="M 6,10 L 26,10 A 6,6 0 0,1 32,16 L 32,32 A 6,6 0 0,1 26,38 L 6,38 A 6,6 0 0,1 0,32 L 0,16 A 6,6 0 0,1 6,10 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M11,18v12l10,-6z" />
+
+    <!-- Top Center: Obsidian Purple Squircle -->
+    <path
+        android:fillColor="#1B122C"
+        android:pathData="M 60,8 L 80,8 A 6,6 0 0,1 86,14 L 86,30 A 6,6 0 0,1 80,36 L 60,36 A 6,6 0 0,1 54,30 L 54,14 A 6,6 0 0,1 60,8 Z" />
+    <path
+        android:fillColor="#7C3AED"
+        android:pathData="M70,12 L77,18 L74,32 L66,32 L63,18 Z" />
+
+    <!-- Top Right: Blue Music Player Squircle -->
+    <path
+        android:fillColor="#0284C7"
+        android:pathData="M 114,10 L 134,10 A 6,6 0 0,1 140,16 L 140,32 A 6,6 0 0,1 134,38 L 114,38 A 6,6 0 0,1 108,32 L 108,16 A 6,6 0 0,1 114,10 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M121,18v12l10,-6z" />
+
+    <!-- Arrows from Top apps pointing to Spotify -->
+    <!-- Left arrow from YT Music to Spotify -->
+    <path
+        android:strokeColor="#1ED760"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M24,42 Q40,55 58,68" />
+    <path
+        android:fillColor="#1ED760"
+        android:pathData="M54,64 L60,70 L52,70 Z" />
+
+    <!-- Center vertical arrow from Obsidian to Spotify -->
+    <path
+        android:strokeColor="#1ED760"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M70,40 L70,58" />
+    <path
+        android:fillColor="#1ED760"
+        android:pathData="M66,54 L70,62 L74,54 Z" />
+
+    <!-- Right arrow from Blue Music to Spotify -->
+    <path
+        android:strokeColor="#1ED760"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M116,42 Q100,55 82,68" />
+    <path
+        android:fillColor="#1ED760"
+        android:pathData="M88,70 L80,70 L86,64 Z" />
+
+    <!-- Central Hub: Spotify Green Circle -->
+    <path
+        android:fillColor="#1ED760"
+        android:pathData="M70,62A17,17 0 1,1 70,96A17,17 0 1,1 70,62Z" />
+    <!-- Spotify Waves in black -->
+    <path
+        android:strokeColor="#0A160F"
+        android:strokeWidth="2.2"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M61,74 C66,72 74,72 79,74" />
+    <path
+        android:strokeColor="#0A160F"
+        android:strokeWidth="2.0"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M63,79 C67,77 73,77 77,79" />
+    <path
+        android:strokeColor="#0A160F"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M65,84 C68,83 72,83 75,84" />
+
+    <!-- Downward Arrow from Spotify to Instagram -->
+    <path
+        android:strokeColor="#1ED760"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M70,100 L70,114" />
+    <path
+        android:fillColor="#1ED760"
+        android:pathData="M66,110 L70,118 L74,110 Z" />
+
+    <!-- Instagram Gradient Squircle at Bottom -->
+    <path
+        android:fillColor="#E1306C"
+        android:pathData="M 54,120 L 86,120 A 10,10 0 0,1 96,130 L 96,150 A 10,10 0 0,1 86,160 L 54,160 A 10,10 0 0,1 44,150 L 44,130 A 10,10 0 0,1 54,120 Z" />
+    <!-- Instagram camera lens ring -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.2"
+        android:fillColor="#00000000"
+        android:pathData="M70,134A6,6 0 1,1 70,146A6,6 0 1,1 70,134Z" />
+    <!-- Instagram camera dot -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M84,131A1.2,1.2 0 1,1 84,133.4A1.2,1.2 0 1,1 84,131Z" />
+
+    <!-- Radiating purple/pink sparkles around Instagram -->
+    <path
+        android:strokeColor="#A855F7"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M101,123 L106,120 M103,136 L108,137" />
+</vector>

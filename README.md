@@ -1,7 +1,9 @@
 <div align="center">
-  <img src="app_icon.svg" width="128" height="128" alt="NotiSpoti App Icon" />
+  <img src="app_icon.svg" width="112" height="112" alt="NotiSpoti App Icon" />
   <h1>NotiSpoti</h1>
   <p><strong>Silent, automated background bridge that syncs music playing in YouTube Music, Obsidian, or local players to Spotify — keeping your Instagram Notes "Share from Spotify" updated in real time!</strong></p>
+  <br />
+  <img src="screenshot/preview.png" width="320" alt="NotiSpoti UI Preview" />
 </div>
 
 [![Android](https://img.shields.io/badge/Platform-Android%208.0%2B%20(API%2026--34%2B)-green.svg)](https://developer.android.com)

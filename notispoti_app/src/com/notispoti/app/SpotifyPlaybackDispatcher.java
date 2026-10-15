@@ -93,9 +93,12 @@ public class SpotifyPlaybackDispatcher {
                     mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState().setEventCallback(new Subscription.EventCallback<PlayerState>() {
                         @Override
                         public void onEvent(PlayerState playerState) {
-                            if (playerState != null && playerState.track != null) {
-                                AppLogger.log(">> [SDK State] Playing: " + playerState.track.name + " by " + playerState.track.artist.name);
-                                AppLogger.updateState(null, playerState.track.uri, "Playing: " + playerState.track.name);
+                            if (playerState != null) {
+                                isPlaying = !playerState.isPaused;
+                                if (playerState.track != null) {
+                                    AppLogger.log(">> [SDK State] Playing: " + playerState.track.name + " by " + playerState.track.artist.name);
+                                    AppLogger.updateState(null, playerState.track.uri, "Playing: " + playerState.track.name);
+                                }
                             }
                         }
                     });
@@ -184,5 +187,45 @@ public class SpotifyPlaybackDispatcher {
                         AppLogger.updateState(null, spotifyUri, "Play Error: " + msg);
                     }
                 });
+    }
+
+    private static boolean isPlaying = false;
+
+    public static boolean isPlaying() {
+        return isPlaying;
+    }
+
+    public static void pause() {
+        if (isConnected() && mSpotifyAppRemote != null) {
+            mSpotifyAppRemote.getPlayerApi().pause();
+            isPlaying = false;
+        }
+    }
+
+    public static void resume() {
+        if (isConnected() && mSpotifyAppRemote != null) {
+            mSpotifyAppRemote.getPlayerApi().resume();
+            isPlaying = true;
+        }
+    }
+
+    public static void togglePlayPause() {
+        if (isPlaying) {
+            pause();
+        } else {
+            resume();
+        }
+    }
+
+    public static void skipNext() {
+        if (isConnected() && mSpotifyAppRemote != null) {
+            mSpotifyAppRemote.getPlayerApi().skipNext();
+        }
+    }
+
+    public static void skipPrevious() {
+        if (isConnected() && mSpotifyAppRemote != null) {
+            mSpotifyAppRemote.getPlayerApi().skipPrevious();
+        }
     }
 }

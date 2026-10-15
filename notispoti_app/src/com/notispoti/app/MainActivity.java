@@ -1,10 +1,12 @@
 package com.notispoti.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,49 +14,86 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 public class MainActivity extends Activity implements AppLogger.Listener {
 
     private static final String SHA1_FINGERPRINT = "C8:DD:03:A6:25:54:60:C1:5D:D1:B6:E3:F0:31:D1:2F:84:1B:59:AF";
 
-    // Top Bar & Dev Mode
-    private Button btnToggleDevMode;
-    private LinearLayout layoutDevMode;
+    // Known source packages
+    private static final String PKG_YT_MUSIC = "com.google.android.apps.youtube.music";
+    private static final String PKG_OBSIDIAN = "md.obsidian";
+    private static final String PKG_MUSIC = "com.android.music";
+    private static final String PKG_OBSIDIAN_ALT = "com.example.obsidian";
 
-    // Hero Master Switch Card
-    private LinearLayout masterSwitchLayout;
-    private TextView masterSwitchBadge;
-    private Switch masterSyncSwitch;
-    private TextView masterSwitchTitle;
-    private TextView masterSwitchSubtitle;
+    // Views: Top Bar
+    private ImageButton btnTopSettings;
+    private ImageButton btnTopHelp;
 
-    // Live Detection Card
+    // View Containers (Tabs)
+    private LinearLayout viewHomeTab;
+    private LinearLayout viewSettingsTab;
+
+    // Bottom Navigation
+    private LinearLayout tabHome;
+    private LinearLayout tabSourceApps;
+    private LinearLayout tabSettings;
+    private ImageView iconTabHome;
+    private TextView textTabHome;
+    private ImageView iconTabApps;
+    private TextView textTabApps;
+    private ImageView iconTabSettings;
+    private TextView textTabSettings;
+
+    // Hero Card
+    private TextView heroSyncBadge;
+
+    // Now Playing Card
+    private ImageView imgAlbumArt;
+    private TextView syncedBadgeText;
     private TextView detectedSongText;
-    private TextView spotifyMatchText;
-    private TextView dispatchStatusText;
+    private TextView detectedArtistText;
+    private ProgressBar playerProgressBar;
+    private TextView textTimeElapsed;
+    private TextView textTimeTotal;
+    private ImageButton btnPrevTrack;
+    private ImageButton btnPlayPauseTrack;
+    private ImageButton btnNextTrack;
 
-    // Setup Checklist Cards
-    private TextView permissionStatusText;
-    private Button btnGrantPermission;
-
-    private TextView sdkStatusText;
-    private Button btnQuickConnectSdk;
-
-    private TextView selectedAppsStatusText;
+    // Source Apps Section
     private Button btnManageApps;
+    private LinearLayout cardSourceYt;
+    private LinearLayout cardSourceObsidian;
+    private LinearLayout cardSourceMusic;
+    private LinearLayout cardSourceCustom;
+    private ImageView checkBadgeYt;
+    private ImageView checkBadgeObsidian;
+    private ImageView checkBadgeMusic;
+    private ImageView checkBadgeCustom;
 
-    // Developer Section
+    // Status Tiles
+    private LinearLayout tileNotificationAccess;
+    private TextView textNotificationStatus;
+    private LinearLayout tileSpotifyConnection;
+    private TextView textSpotifyStatus;
+
+    // Big Master Sync Banner
+    private LinearLayout bannerMasterSync;
+    private ImageView imgMasterSyncPlay;
+    private TextView textMasterSyncTitle;
+    private TextView textMasterSyncSub;
+
+    // Developer / Settings Views
     private EditText inputClientId;
     private Button btnConnectSdk;
     private Button btnCopySha1;
@@ -71,60 +110,67 @@ public class MainActivity extends Activity implements AppLogger.Listener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Top Bar & Dev Mode Toggle
-        btnToggleDevMode = findViewById(R.id.btnToggleDevMode);
-        layoutDevMode = findViewById(R.id.layoutDevMode);
+        bindViews();
+        setupNavigation();
+        setupHeroAndMasterSync();
+        setupNowPlayingControls();
+        setupSourceAppTiles();
+        setupStatusTiles();
+        setupDeveloperControls();
 
-        boolean isDev = AppPreferences.isDeveloperMode(this);
-        setDevModeVisible(isDev);
+        AppLogger.log("NotiSpoti initialized. Ready for silent background sync.");
+    }
 
-        btnToggleDevMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean currentlyDev = (layoutDevMode.getVisibility() == View.VISIBLE);
-                boolean newDev = !currentlyDev;
-                AppPreferences.setDeveloperMode(MainActivity.this, newDev);
-                setDevModeVisible(newDev);
-                Toast.makeText(MainActivity.this,
-                        newDev ? "Developer mode enabled" : "Developer mode hidden",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void bindViews() {
+        btnTopSettings = findViewById(R.id.btnTopSettings);
+        btnTopHelp = findViewById(R.id.btnTopHelp);
 
-        // Hero Master Switch Card
-        masterSwitchLayout = findViewById(R.id.masterSwitchLayout);
-        masterSwitchBadge = findViewById(R.id.masterSwitchBadge);
-        masterSyncSwitch = findViewById(R.id.masterSyncSwitch);
-        masterSwitchTitle = findViewById(R.id.masterSwitchTitle);
-        masterSwitchSubtitle = findViewById(R.id.masterSwitchSubtitle);
+        viewHomeTab = findViewById(R.id.viewHomeTab);
+        viewSettingsTab = findViewById(R.id.viewSettingsTab);
 
-        boolean isSyncOn = AppPreferences.isSyncEnabled(this);
-        masterSyncSwitch.setChecked(isSyncOn);
-        updateMasterSwitchUI(isSyncOn);
+        tabHome = findViewById(R.id.tabHome);
+        tabSourceApps = findViewById(R.id.tabSourceApps);
+        tabSettings = findViewById(R.id.tabSettings);
+        iconTabHome = findViewById(R.id.iconTabHome);
+        textTabHome = findViewById(R.id.textTabHome);
+        iconTabApps = findViewById(R.id.iconTabApps);
+        textTabApps = findViewById(R.id.textTabApps);
+        iconTabSettings = findViewById(R.id.iconTabSettings);
+        textTabSettings = findViewById(R.id.textTabSettings);
 
-        masterSyncSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                AppPreferences.setSyncEnabled(MainActivity.this, isChecked);
-                updateMasterSwitchUI(isChecked);
-                AppLogger.log(">> Master Sync Engine: " + (isChecked ? "ACTIVATED" : "PAUSED (OFF)"));
-            }
-        });
+        heroSyncBadge = findViewById(R.id.heroSyncBadge);
 
-        // Live Detection Card
+        imgAlbumArt = findViewById(R.id.imgAlbumArt);
+        syncedBadgeText = findViewById(R.id.syncedBadgeText);
         detectedSongText = findViewById(R.id.detectedSongText);
-        spotifyMatchText = findViewById(R.id.spotifyMatchText);
-        dispatchStatusText = findViewById(R.id.dispatchStatusText);
+        detectedArtistText = findViewById(R.id.detectedArtistText);
+        playerProgressBar = findViewById(R.id.playerProgressBar);
+        textTimeElapsed = findViewById(R.id.textTimeElapsed);
+        textTimeTotal = findViewById(R.id.textTimeTotal);
+        btnPrevTrack = findViewById(R.id.btnPrevTrack);
+        btnPlayPauseTrack = findViewById(R.id.btnPlayPauseTrack);
+        btnNextTrack = findViewById(R.id.btnNextTrack);
 
-        // Setup Checklist Cards
-        permissionStatusText = findViewById(R.id.permissionStatusText);
-        btnGrantPermission = findViewById(R.id.btnGrantPermission);
-        sdkStatusText = findViewById(R.id.sdkStatusText);
-        btnQuickConnectSdk = findViewById(R.id.btnQuickConnectSdk);
-        selectedAppsStatusText = findViewById(R.id.selectedAppsStatusText);
         btnManageApps = findViewById(R.id.btnManageApps);
+        cardSourceYt = findViewById(R.id.cardSourceYt);
+        cardSourceObsidian = findViewById(R.id.cardSourceObsidian);
+        cardSourceMusic = findViewById(R.id.cardSourceMusic);
+        cardSourceCustom = findViewById(R.id.cardSourceCustom);
+        checkBadgeYt = findViewById(R.id.checkBadgeYt);
+        checkBadgeObsidian = findViewById(R.id.checkBadgeObsidian);
+        checkBadgeMusic = findViewById(R.id.checkBadgeMusic);
+        checkBadgeCustom = findViewById(R.id.checkBadgeCustom);
 
-        // Developer Section Controls
+        tileNotificationAccess = findViewById(R.id.tileNotificationAccess);
+        textNotificationStatus = findViewById(R.id.textNotificationStatus);
+        tileSpotifyConnection = findViewById(R.id.tileSpotifyConnection);
+        textSpotifyStatus = findViewById(R.id.textSpotifyStatus);
+
+        bannerMasterSync = findViewById(R.id.bannerMasterSync);
+        imgMasterSyncPlay = findViewById(R.id.imgMasterSyncPlay);
+        textMasterSyncTitle = findViewById(R.id.textMasterSyncTitle);
+        textMasterSyncSub = findViewById(R.id.textMasterSyncSub);
+
         inputClientId = findViewById(R.id.inputClientId);
         btnConnectSdk = findViewById(R.id.btnConnectSdk);
         btnCopySha1 = findViewById(R.id.btnCopySha1);
@@ -133,15 +179,147 @@ public class MainActivity extends Activity implements AppLogger.Listener {
         btnClearLogs = findViewById(R.id.btnClearLogs);
         logScrollView = findViewById(R.id.logScrollView);
         logTextView = findViewById(R.id.logTextView);
+    }
 
-        btnGrantPermission.setOnClickListener(new View.OnClickListener() {
+    private void setupNavigation() {
+        btnTopSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
+                switchTab(2);
+            }
+        });
+
+        btnTopHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showHelpDialog();
+            }
+        });
+
+        tabHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchTab(0);
+            }
+        });
+
+        tabSourceApps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AppSelectionActivity.class);
                 startActivity(intent);
             }
         });
 
+        tabSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchTab(2);
+            }
+        });
+    }
+
+    private void switchTab(int tabIndex) {
+        if (tabIndex == 0) {
+            // Home Tab
+            viewHomeTab.setVisibility(View.VISIBLE);
+            viewSettingsTab.setVisibility(View.GONE);
+
+            iconTabHome.setColorFilter(0xFF1ED760);
+            textTabHome.setTextColor(0xFF1ED760);
+
+            iconTabApps.setColorFilter(0xFF8E8E93);
+            textTabApps.setTextColor(0xFF8E8E93);
+
+            iconTabSettings.setColorFilter(0xFF8E8E93);
+            textTabSettings.setTextColor(0xFF8E8E93);
+        } else if (tabIndex == 2) {
+            // Settings / Dev Tab
+            viewHomeTab.setVisibility(View.GONE);
+            viewSettingsTab.setVisibility(View.VISIBLE);
+
+            iconTabHome.setColorFilter(0xFF8E8E93);
+            textTabHome.setTextColor(0xFF8E8E93);
+
+            iconTabApps.setColorFilter(0xFF8E8E93);
+            textTabApps.setTextColor(0xFF8E8E93);
+
+            iconTabSettings.setColorFilter(0xFF1ED760);
+            textTabSettings.setTextColor(0xFF1ED760);
+        }
+    }
+
+    private void setupHeroAndMasterSync() {
+        boolean isSyncOn = AppPreferences.isSyncEnabled(this);
+        updateMasterSyncUI(isSyncOn);
+
+        bannerMasterSync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean current = AppPreferences.isSyncEnabled(MainActivity.this);
+                boolean toggled = !current;
+                AppPreferences.setSyncEnabled(MainActivity.this, toggled);
+                updateMasterSyncUI(toggled);
+                AppLogger.log(">> Master Sync Engine toggled: " + (toggled ? "ACTIVE" : "PAUSED (OFF)"));
+                Toast.makeText(MainActivity.this,
+                        toggled ? "Sync is now Active" : "Sync paused",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateMasterSyncUI(boolean active) {
+        if (active) {
+            bannerMasterSync.setBackgroundResource(R.drawable.bg_master_active_banner);
+            imgMasterSyncPlay.setImageResource(R.drawable.ic_play_black);
+            textMasterSyncTitle.setText("Sync is Active");
+            textMasterSyncTitle.setTextColor(0xFF000000);
+            textMasterSyncSub.setText("Listening and syncing automatically");
+            textMasterSyncSub.setTextColor(0xFF0A3816);
+
+            heroSyncBadge.setText("● Syncing");
+            heroSyncBadge.setBackgroundResource(R.drawable.bg_m3_chip_active);
+            heroSyncBadge.setTextColor(0xFF1ED760);
+        } else {
+            bannerMasterSync.setBackgroundResource(R.drawable.bg_master_paused_banner);
+            imgMasterSyncPlay.setImageResource(R.drawable.ic_pause_white);
+            textMasterSyncTitle.setText("Sync is Paused");
+            textMasterSyncTitle.setTextColor(0xFFFFFFFF);
+            textMasterSyncSub.setText("Tap to resume background sync");
+            textMasterSyncSub.setTextColor(0xFFA0A0A0);
+
+            heroSyncBadge.setText("○ Paused");
+            heroSyncBadge.setBackgroundResource(R.drawable.bg_m3_chip_inactive);
+            heroSyncBadge.setTextColor(0xFFFF5252);
+        }
+    }
+
+    private void setupNowPlayingControls() {
+        btnPlayPauseTrack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SpotifyPlaybackDispatcher.togglePlayPause();
+                boolean isPlaying = SpotifyPlaybackDispatcher.isPlaying();
+                btnPlayPauseTrack.setImageResource(isPlaying ? R.drawable.ic_pause_white : R.drawable.ic_play_white);
+            }
+        });
+
+        btnPrevTrack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SpotifyPlaybackDispatcher.skipPrevious();
+            }
+        });
+
+        btnNextTrack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SpotifyPlaybackDispatcher.skipNext();
+            }
+        });
+    }
+
+    private void setupSourceAppTiles() {
         btnManageApps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,7 +328,83 @@ public class MainActivity extends Activity implements AppLogger.Listener {
             }
         });
 
-        // Load saved Client ID
+        cardSourceYt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                togglePackage(PKG_YT_MUSIC);
+            }
+        });
+
+        cardSourceObsidian.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                togglePackage(PKG_OBSIDIAN);
+            }
+        });
+
+        cardSourceMusic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                togglePackage(PKG_MUSIC);
+            }
+        });
+
+        cardSourceCustom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                togglePackage(PKG_OBSIDIAN_ALT);
+            }
+        });
+
+        updateSourceBadges();
+    }
+
+    private void togglePackage(String pkg) {
+        Set<String> selected = AppPreferences.getSelectedPackages(this);
+        if (selected.contains(pkg)) {
+            selected.remove(pkg);
+        } else {
+            selected.add(pkg);
+        }
+        AppPreferences.saveSelectedPackages(this, selected);
+        updateSourceBadges();
+        Toast.makeText(this, selected.contains(pkg) ? "App added to sync" : "App removed from sync", Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateSourceBadges() {
+        Set<String> selected = AppPreferences.getSelectedPackages(this);
+        checkBadgeYt.setVisibility(selected.contains(PKG_YT_MUSIC) ? View.VISIBLE : View.GONE);
+        checkBadgeObsidian.setVisibility(selected.contains(PKG_OBSIDIAN) ? View.VISIBLE : View.GONE);
+        checkBadgeMusic.setVisibility(selected.contains(PKG_MUSIC) ? View.VISIBLE : View.GONE);
+        checkBadgeCustom.setVisibility(selected.contains(PKG_OBSIDIAN_ALT) ? View.VISIBLE : View.GONE);
+    }
+
+    private void setupStatusTiles() {
+        tileNotificationAccess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
+                startActivity(intent);
+            }
+        });
+
+        tileSpotifyConnection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences prefs = getSharedPreferences(SpotifyPlaybackDispatcher.PREFS_NAME, Context.MODE_PRIVATE);
+                String clientId = prefs.getString(SpotifyPlaybackDispatcher.KEY_CLIENT_ID, "");
+                if (TextUtils.isEmpty(clientId)) {
+                    switchTab(2);
+                    Toast.makeText(MainActivity.this, "Please enter your Spotify Client ID", Toast.LENGTH_SHORT).show();
+                    inputClientId.requestFocus();
+                } else {
+                    SpotifyPlaybackDispatcher.connect(MainActivity.this, clientId, null);
+                }
+            }
+        });
+    }
+
+    private void setupDeveloperControls() {
         final SharedPreferences prefs = getSharedPreferences(SpotifyPlaybackDispatcher.PREFS_NAME, Context.MODE_PRIVATE);
         String savedClientId = prefs.getString(SpotifyPlaybackDispatcher.KEY_CLIENT_ID, "");
         if (!savedClientId.isEmpty()) {
@@ -160,23 +414,14 @@ public class MainActivity extends Activity implements AppLogger.Listener {
         btnConnectSdk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveAndConnectSpotify();
-            }
-        });
-
-        btnQuickConnectSdk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 String clientId = inputClientId.getText().toString().trim();
                 if (TextUtils.isEmpty(clientId)) {
-                    // Open Developer Mode so user can input Client ID
-                    setDevModeVisible(true);
-                    AppPreferences.setDeveloperMode(MainActivity.this, true);
-                    Toast.makeText(MainActivity.this, "Please enter your Spotify Client ID below", Toast.LENGTH_LONG).show();
-                    inputClientId.requestFocus();
-                } else {
-                    saveAndConnectSpotify();
+                    Toast.makeText(MainActivity.this, "Please enter a valid Spotify Client ID", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                prefs.edit().putString(SpotifyPlaybackDispatcher.KEY_CLIENT_ID, clientId).apply();
+                AppLogger.log("Saved Client ID. Connecting to App Remote...");
+                SpotifyPlaybackDispatcher.connect(MainActivity.this, clientId, null);
             }
         });
 
@@ -212,63 +457,28 @@ public class MainActivity extends Activity implements AppLogger.Listener {
                 }
             }
         });
-
-        AppLogger.log("NotiSpoti initialized. Ready for silent background sync.");
     }
 
-    private void setDevModeVisible(boolean visible) {
-        if (layoutDevMode != null) {
-            layoutDevMode.setVisibility(visible ? View.VISIBLE : View.GONE);
-        }
-        if (btnToggleDevMode != null) {
-            btnToggleDevMode.setText(visible ? "🛠 Dev: ON" : "🛠 Dev Mode");
-            btnToggleDevMode.setTextColor(visible ? 0xFF1DB954 : 0xFFA0A0A0);
-        }
-    }
-
-    private void saveAndConnectSpotify() {
-        String clientId = inputClientId.getText().toString().trim();
-        if (TextUtils.isEmpty(clientId)) {
-            AppLogger.log("Please enter a valid Spotify Client ID.");
-            Toast.makeText(this, "Please enter a valid Spotify Client ID", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        SharedPreferences prefs = getSharedPreferences(SpotifyPlaybackDispatcher.PREFS_NAME, Context.MODE_PRIVATE);
-        prefs.edit().putString(SpotifyPlaybackDispatcher.KEY_CLIENT_ID, clientId).apply();
-        AppLogger.log("Saved Client ID. Connecting to App Remote...");
-        SpotifyPlaybackDispatcher.connect(MainActivity.this, clientId, null);
+    private void showHelpDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("How NotiSpoti Works")
+                .setMessage("1. Grant Notification Access so NotiSpoti can detect song changes.\n\n" +
+                        "2. Create a free app at developer.spotify.com with package 'com.notispoti.app' and redirect URI 'com.notispoti.app://callback'.\n\n" +
+                        "3. Paste your Client ID and tap Save.\n\n" +
+                        "4. Keep Spotify running in the background (set battery to Unrestricted).\n\n" +
+                        "5. Play any song on YouTube Music or Obsidian — your Instagram Notes will update automatically!")
+                .setPositiveButton("Got It", null)
+                .show();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         checkPermissions();
-        updateSourceAppsSummary();
+        updateSourceBadges();
         boolean isSyncOn = AppPreferences.isSyncEnabled(this);
-        if (masterSyncSwitch != null) {
-            masterSyncSwitch.setChecked(isSyncOn);
-        }
-        updateMasterSwitchUI(isSyncOn);
+        updateMasterSyncUI(isSyncOn);
         AppLogger.setListener(this);
-    }
-
-    private void updateMasterSwitchUI(boolean enabled) {
-        if (masterSwitchTitle == null || masterSwitchSubtitle == null || masterSwitchBadge == null || masterSwitchLayout == null) return;
-        if (enabled) {
-            masterSwitchLayout.setBackgroundResource(R.drawable.bg_m3_card_active);
-            masterSwitchBadge.setText("● ACTIVE");
-            masterSwitchBadge.setBackgroundResource(R.drawable.bg_m3_chip_active);
-            masterSwitchBadge.setTextColor(0xFF1DB954);
-            masterSwitchTitle.setText("Silent Sync Engine: Active");
-            masterSwitchSubtitle.setText("Listening to selected apps & syncing to Spotify in the background.");
-        } else {
-            masterSwitchLayout.setBackgroundResource(R.drawable.bg_m3_card);
-            masterSwitchBadge.setText("○ PAUSED");
-            masterSwitchBadge.setBackgroundResource(R.drawable.bg_m3_chip_inactive);
-            masterSwitchBadge.setTextColor(0xFFFF5252);
-            masterSwitchTitle.setText("Silent Sync Engine: Paused");
-            masterSwitchSubtitle.setText("Sync paused. Incoming notifications will be ignored.");
-        }
     }
 
     @Override
@@ -277,49 +487,11 @@ public class MainActivity extends Activity implements AppLogger.Listener {
         AppLogger.setListener(null);
     }
 
-    private void updateSourceAppsSummary() {
-        if (selectedAppsStatusText == null) return;
-        Set<String> selected = AppPreferences.getSelectedPackages(this);
-        if (selected == null || selected.isEmpty()) {
-            selectedAppsStatusText.setText("No source apps selected. Sync is paused.");
-            selectedAppsStatusText.setTextColor(0xFFFFAB00);
-            return;
-        }
-
-        android.content.pm.PackageManager pm = getPackageManager();
-        List<String> names = new ArrayList<>();
-        for (String pkg : selected) {
-            try {
-                android.content.pm.ApplicationInfo info = pm.getApplicationInfo(pkg, 0);
-                CharSequence label = pm.getApplicationLabel(info);
-                names.add((label != null) ? label.toString() : pkg);
-            } catch (Exception e) {
-                if (pkg.contains(".")) {
-                    names.add(pkg.substring(pkg.lastIndexOf('.') + 1));
-                } else {
-                    names.add(pkg);
-                }
-            }
-        }
-
-        String preview = TextUtils.join(", ", names);
-        if (preview.length() > 50) {
-            preview = preview.substring(0, 47) + "...";
-        }
-        selectedAppsStatusText.setText("Syncing from " + selected.size() + " app" + (selected.size() == 1 ? "" : "s") + " (" + preview + ")");
-        selectedAppsStatusText.setTextColor(0xFF00E676);
-    }
-
     private void checkPermissions() {
         boolean enabled = isNotificationListenerEnabled();
-        if (enabled) {
-            permissionStatusText.setText("● Granted & Active");
-            permissionStatusText.setTextColor(0xFF00E676);
-            btnGrantPermission.setVisibility(View.GONE);
-        } else {
-            permissionStatusText.setText("▲ Action Required: Grant Access");
-            permissionStatusText.setTextColor(0xFFFFAB00);
-            btnGrantPermission.setVisibility(View.VISIBLE);
+        if (textNotificationStatus != null) {
+            textNotificationStatus.setText(enabled ? "Enabled" : "Tap to Grant");
+            textNotificationStatus.setTextColor(enabled ? 0xFF1ED760 : 0xFFFFB74D);
         }
     }
 
@@ -379,30 +551,37 @@ public class MainActivity extends Activity implements AppLogger.Listener {
 
     @Override
     public void onStateUpdated(String song, String spotifyUri, String dispatchStatus) {
-        if (detectedSongText != null && song != null) {
-            detectedSongText.setText(song);
+        if (song != null) {
+            if (song.contains(" - ")) {
+                String[] parts = song.split(" - ", 2);
+                if (detectedSongText != null) detectedSongText.setText(parts[0].trim());
+                if (detectedArtistText != null) detectedArtistText.setText(parts[1].trim());
+            } else {
+                if (detectedSongText != null) detectedSongText.setText(song);
+                if (detectedArtistText != null) detectedArtistText.setText("Playing via NotiSpoti");
+            }
         }
-        if (spotifyMatchText != null && spotifyUri != null) {
-            spotifyMatchText.setText("Spotify URI: " + spotifyUri);
+        if (syncedBadgeText != null) {
+            if (dispatchStatus != null && dispatchStatus.contains("Playing")) {
+                syncedBadgeText.setText("Synced to Spotify ✓");
+            } else if (dispatchStatus != null) {
+                syncedBadgeText.setText(dispatchStatus);
+            }
         }
-        if (dispatchStatusText != null && dispatchStatus != null) {
-            dispatchStatusText.setText(dispatchStatus);
+        if (btnPlayPauseTrack != null) {
+            btnPlayPauseTrack.setImageResource(R.drawable.ic_pause_white);
         }
     }
 
     @Override
     public void onSdkStateUpdated(String statusText, int color) {
-        if (sdkStatusText != null) {
-            sdkStatusText.setText(statusText);
-            sdkStatusText.setTextColor(color);
-        }
-        if (btnQuickConnectSdk != null) {
+        if (textSpotifyStatus != null) {
             if (statusText != null && statusText.contains("Connected")) {
-                btnQuickConnectSdk.setText("Connected ✓");
-                btnQuickConnectSdk.setEnabled(false);
+                textSpotifyStatus.setText("Connected");
+                textSpotifyStatus.setTextColor(0xFF1ED760);
             } else {
-                btnQuickConnectSdk.setText("Connect");
-                btnQuickConnectSdk.setEnabled(true);
+                textSpotifyStatus.setText("Not Connected");
+                textSpotifyStatus.setTextColor(0xFFFFB74D);
             }
         }
     }

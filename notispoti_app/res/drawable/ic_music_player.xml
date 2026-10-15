@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="36dp"
+    android:height="36dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- Blue Squircle -->
+    <path
+        android:fillColor="#0284C7"
+        android:pathData="M 12,2 L 36,2 A 10,10 0 0,1 46,12 L 46,36 A 10,10 0 0,1 36,46 L 12,46 A 10,10 0 0,1 2,36 L 2,12 A 10,10 0 0,1 12,2 Z" />
+    <!-- White Play / Audio Note -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M18,14v20l16,-10z" />
+</vector>

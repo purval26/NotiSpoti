@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="36dp"
+    android:height="36dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- Dark Purple Base -->
+    <path
+        android:fillColor="#1B122C"
+        android:pathData="M 12,2 L 36,2 A 10,10 0 0,1 46,12 L 46,36 A 10,10 0 0,1 36,46 L 12,46 A 10,10 0 0,1 2,36 L 2,12 A 10,10 0 0,1 12,2 Z" />
+    <!-- Purple Obsidian Crystal -->
+    <path
+        android:fillColor="#7C3AED"
+        android:pathData="M24,8 L34,18 L30,38 L18,38 L14,18 Z" />
+    <!-- Facet 1 (Highlight) -->
+    <path
+        android:fillColor="#A78BFA"
+        android:pathData="M24,8 L34,18 L26,26 L24,8 Z" />
+    <!-- Facet 2 (Shadow) -->
+    <path
+        android:fillColor="#6D28D9"
+        android:pathData="M14,18 L24,8 L26,26 L18,38 Z" />
+</vector>
