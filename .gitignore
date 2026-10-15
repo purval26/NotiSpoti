@@ -1,0 +1,31 @@
+# Build outputs and temporary directories
+bin/
+obj/
+gen/
+*.dex
+*.class
+*.idsig
+*.apk
+
+# Reverse engineering web player raw dumps (large blobs)
+web-player.js
+vendor.js
+mwp.js
+mwp_vendor.js
+mobile_spotify.html
+spotify_home.html
+search_chunk.js
+
+# IDE and Editor files
+.idea/
+*.iml
+.vscode/
+*.swp
+*.bak
+*~
+.DS_Store
+
+# Android Studio / Gradle
+.gradle/
+build/
+local.properties
