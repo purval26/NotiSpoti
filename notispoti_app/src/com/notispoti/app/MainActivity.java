@@ -1,12 +1,10 @@
 package com.notispoti.app;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,12 +12,13 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,39 +35,21 @@ public class MainActivity extends Activity implements AppLogger.Listener {
     private static final String PKG_MUSIC = "com.android.music";
     private static final String PKG_OBSIDIAN_ALT = "com.example.obsidian";
 
-    // Views: Top Bar
+    // Header & Views
     private ImageButton btnTopSettings;
-    private ImageButton btnTopHelp;
-
-    // View Containers (Tabs)
     private LinearLayout viewHomeTab;
     private LinearLayout viewSettingsTab;
+    private Button btnBackFromSettings;
 
-    // Bottom Navigation
-    private LinearLayout tabHome;
-    private LinearLayout tabSourceApps;
-    private LinearLayout tabSettings;
-    private ImageView iconTabHome;
-    private TextView textTabHome;
-    private ImageView iconTabApps;
-    private TextView textTabApps;
-    private ImageView iconTabSettings;
-    private TextView textTabSettings;
-
-    // Hero Card
+    // Main Hero Sync Card
     private TextView heroSyncBadge;
+    private TextView heroSyncSubStatus;
+    private Switch masterSyncSwitch;
 
     // Now Playing Card
-    private ImageView imgAlbumArt;
-    private TextView syncedBadgeText;
     private TextView detectedSongText;
     private TextView detectedArtistText;
-    private ProgressBar playerProgressBar;
-    private TextView textTimeElapsed;
-    private TextView textTimeTotal;
-    private ImageButton btnPrevTrack;
-    private ImageButton btnPlayPauseTrack;
-    private ImageButton btnNextTrack;
+    private TextView syncedBadgeText;
 
     // Source Apps Section
     private Button btnManageApps;
@@ -81,19 +62,24 @@ public class MainActivity extends Activity implements AppLogger.Listener {
     private ImageView checkBadgeMusic;
     private ImageView checkBadgeCustom;
 
-    // Status Tiles
+    // Connection Status Cards
     private LinearLayout tileNotificationAccess;
     private TextView textNotificationStatus;
+    private TextView textNotificationDesc;
+    private TextView textNotificationAction;
+
     private LinearLayout tileSpotifyConnection;
     private TextView textSpotifyStatus;
+    private TextView textSpotifyDesc;
+    private TextView textSpotifyAction;
 
-    // Big Master Sync Banner
+    // Primary Action Bottom Banner
     private LinearLayout bannerMasterSync;
-    private ImageView imgMasterSyncPlay;
+    private ImageView imgMasterSyncIcon;
     private TextView textMasterSyncTitle;
     private TextView textMasterSyncSub;
 
-    // Developer / Settings Views
+    // Settings & Developer Tools
     private EditText inputClientId;
     private Button btnConnectSdk;
     private Button btnCopySha1;
@@ -111,9 +97,8 @@ public class MainActivity extends Activity implements AppLogger.Listener {
         setContentView(R.layout.activity_main);
 
         bindViews();
-        setupNavigation();
+        setupHeaderAndSettings();
         setupHeroAndMasterSync();
-        setupNowPlayingControls();
         setupSourceAppTiles();
         setupStatusTiles();
         setupDeveloperControls();
@@ -123,33 +108,17 @@ public class MainActivity extends Activity implements AppLogger.Listener {
 
     private void bindViews() {
         btnTopSettings = findViewById(R.id.btnTopSettings);
-        btnTopHelp = findViewById(R.id.btnTopHelp);
-
         viewHomeTab = findViewById(R.id.viewHomeTab);
         viewSettingsTab = findViewById(R.id.viewSettingsTab);
-
-        tabHome = findViewById(R.id.tabHome);
-        tabSourceApps = findViewById(R.id.tabSourceApps);
-        tabSettings = findViewById(R.id.tabSettings);
-        iconTabHome = findViewById(R.id.iconTabHome);
-        textTabHome = findViewById(R.id.textTabHome);
-        iconTabApps = findViewById(R.id.iconTabApps);
-        textTabApps = findViewById(R.id.textTabApps);
-        iconTabSettings = findViewById(R.id.iconTabSettings);
-        textTabSettings = findViewById(R.id.textTabSettings);
+        btnBackFromSettings = findViewById(R.id.btnBackFromSettings);
 
         heroSyncBadge = findViewById(R.id.heroSyncBadge);
+        heroSyncSubStatus = findViewById(R.id.heroSyncSubStatus);
+        masterSyncSwitch = findViewById(R.id.masterSyncSwitch);
 
-        imgAlbumArt = findViewById(R.id.imgAlbumArt);
-        syncedBadgeText = findViewById(R.id.syncedBadgeText);
         detectedSongText = findViewById(R.id.detectedSongText);
         detectedArtistText = findViewById(R.id.detectedArtistText);
-        playerProgressBar = findViewById(R.id.playerProgressBar);
-        textTimeElapsed = findViewById(R.id.textTimeElapsed);
-        textTimeTotal = findViewById(R.id.textTimeTotal);
-        btnPrevTrack = findViewById(R.id.btnPrevTrack);
-        btnPlayPauseTrack = findViewById(R.id.btnPlayPauseTrack);
-        btnNextTrack = findViewById(R.id.btnNextTrack);
+        syncedBadgeText = findViewById(R.id.syncedBadgeText);
 
         btnManageApps = findViewById(R.id.btnManageApps);
         cardSourceYt = findViewById(R.id.cardSourceYt);
@@ -163,11 +132,16 @@ public class MainActivity extends Activity implements AppLogger.Listener {
 
         tileNotificationAccess = findViewById(R.id.tileNotificationAccess);
         textNotificationStatus = findViewById(R.id.textNotificationStatus);
+        textNotificationDesc = findViewById(R.id.textNotificationDesc);
+        textNotificationAction = findViewById(R.id.textNotificationAction);
+
         tileSpotifyConnection = findViewById(R.id.tileSpotifyConnection);
         textSpotifyStatus = findViewById(R.id.textSpotifyStatus);
+        textSpotifyDesc = findViewById(R.id.textSpotifyDesc);
+        textSpotifyAction = findViewById(R.id.textSpotifyAction);
 
         bannerMasterSync = findViewById(R.id.bannerMasterSync);
-        imgMasterSyncPlay = findViewById(R.id.imgMasterSyncPlay);
+        imgMasterSyncIcon = findViewById(R.id.imgMasterSyncIcon);
         textMasterSyncTitle = findViewById(R.id.textMasterSyncTitle);
         textMasterSyncSub = findViewById(R.id.textMasterSyncSub);
 
@@ -181,150 +155,92 @@ public class MainActivity extends Activity implements AppLogger.Listener {
         logTextView = findViewById(R.id.logTextView);
     }
 
-    private void setupNavigation() {
+    private void setupHeaderAndSettings() {
         btnTopSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchTab(2);
+                viewHomeTab.setVisibility(View.GONE);
+                viewSettingsTab.setVisibility(View.VISIBLE);
             }
         });
 
-        btnTopHelp.setOnClickListener(new View.OnClickListener() {
+        btnBackFromSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showHelpDialog();
+                viewSettingsTab.setVisibility(View.GONE);
+                viewHomeTab.setVisibility(View.VISIBLE);
             }
         });
-
-        tabHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchTab(0);
-            }
-        });
-
-        tabSourceApps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AppSelectionActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        tabSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchTab(2);
-            }
-        });
-    }
-
-    private void switchTab(int tabIndex) {
-        if (tabIndex == 0) {
-            // Home Tab
-            viewHomeTab.setVisibility(View.VISIBLE);
-            viewSettingsTab.setVisibility(View.GONE);
-
-            iconTabHome.setColorFilter(0xFF1ED760);
-            textTabHome.setTextColor(0xFF1ED760);
-
-            iconTabApps.setColorFilter(0xFF8E8E93);
-            textTabApps.setTextColor(0xFF8E8E93);
-
-            iconTabSettings.setColorFilter(0xFF8E8E93);
-            textTabSettings.setTextColor(0xFF8E8E93);
-        } else if (tabIndex == 2) {
-            // Settings / Dev Tab
-            viewHomeTab.setVisibility(View.GONE);
-            viewSettingsTab.setVisibility(View.VISIBLE);
-
-            iconTabHome.setColorFilter(0xFF8E8E93);
-            textTabHome.setTextColor(0xFF8E8E93);
-
-            iconTabApps.setColorFilter(0xFF8E8E93);
-            textTabApps.setTextColor(0xFF8E8E93);
-
-            iconTabSettings.setColorFilter(0xFF1ED760);
-            textTabSettings.setTextColor(0xFF1ED760);
-        }
     }
 
     private void setupHeroAndMasterSync() {
         boolean isSyncOn = AppPreferences.isSyncEnabled(this);
+        masterSyncSwitch.setChecked(isSyncOn);
         updateMasterSyncUI(isSyncOn);
+
+        masterSyncSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                AppPreferences.setSyncEnabled(MainActivity.this, isChecked);
+                updateMasterSyncUI(isChecked);
+                AppLogger.log(">> Master Sync Engine: " + (isChecked ? "ACTIVATED" : "PAUSED (OFF)"));
+            }
+        });
 
         bannerMasterSync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean current = AppPreferences.isSyncEnabled(MainActivity.this);
-                boolean toggled = !current;
-                AppPreferences.setSyncEnabled(MainActivity.this, toggled);
-                updateMasterSyncUI(toggled);
-                AppLogger.log(">> Master Sync Engine toggled: " + (toggled ? "ACTIVE" : "PAUSED (OFF)"));
-                Toast.makeText(MainActivity.this,
-                        toggled ? "Sync is now Active" : "Sync paused",
-                        Toast.LENGTH_SHORT).show();
+                boolean nextState = !AppPreferences.isSyncEnabled(MainActivity.this);
+                AppPreferences.setSyncEnabled(MainActivity.this, nextState);
+                masterSyncSwitch.setChecked(nextState);
+                updateMasterSyncUI(nextState);
             }
         });
     }
 
-    private void updateMasterSyncUI(boolean active) {
-        if (active) {
+    private void updateMasterSyncUI(boolean enabled) {
+        if (heroSyncBadge == null || heroSyncSubStatus == null || bannerMasterSync == null) return;
+
+        if (enabled) {
+            heroSyncBadge.setText("● ON");
+            heroSyncBadge.setBackgroundResource(R.drawable.bg_m3_chip_active);
+            heroSyncBadge.setTextColor(0xFF1ED760);
+
+            heroSyncSubStatus.setText("Syncing automatically");
+            heroSyncSubStatus.setTextColor(0xFF1ED760);
+
             bannerMasterSync.setBackgroundResource(R.drawable.bg_master_active_banner);
-            imgMasterSyncPlay.setImageResource(R.drawable.ic_play_black);
-            textMasterSyncTitle.setText("Sync is Active");
+            if (imgMasterSyncIcon != null) {
+                imgMasterSyncIcon.setColorFilter(0xFF000000);
+            }
+            textMasterSyncTitle.setText("SYNC IS ACTIVE");
             textMasterSyncTitle.setTextColor(0xFF000000);
             textMasterSyncSub.setText("Listening and syncing automatically");
             textMasterSyncSub.setTextColor(0xFF0A3816);
-
-            heroSyncBadge.setText("● Syncing");
-            heroSyncBadge.setBackgroundResource(R.drawable.bg_m3_chip_active);
-            heroSyncBadge.setTextColor(0xFF1ED760);
         } else {
-            bannerMasterSync.setBackgroundResource(R.drawable.bg_master_paused_banner);
-            imgMasterSyncPlay.setImageResource(R.drawable.ic_pause_white);
-            textMasterSyncTitle.setText("Sync is Paused");
-            textMasterSyncTitle.setTextColor(0xFFFFFFFF);
-            textMasterSyncSub.setText("Tap to resume background sync");
-            textMasterSyncSub.setTextColor(0xFFA0A0A0);
-
-            heroSyncBadge.setText("○ Paused");
+            heroSyncBadge.setText("○ OFF");
             heroSyncBadge.setBackgroundResource(R.drawable.bg_m3_chip_inactive);
             heroSyncBadge.setTextColor(0xFFFF5252);
+
+            heroSyncSubStatus.setText("Sync is paused");
+            heroSyncSubStatus.setTextColor(0xFFFF5252);
+
+            bannerMasterSync.setBackgroundResource(R.drawable.bg_master_paused_banner);
+            if (imgMasterSyncIcon != null) {
+                imgMasterSyncIcon.setColorFilter(0xFF1ED760);
+            }
+            textMasterSyncTitle.setText("START SYNC");
+            textMasterSyncTitle.setTextColor(0xFFFFFFFF);
+            textMasterSyncSub.setText("Start listening for music");
+            textMasterSyncSub.setTextColor(0xFF8E8E93);
         }
-    }
-
-    private void setupNowPlayingControls() {
-        btnPlayPauseTrack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SpotifyPlaybackDispatcher.togglePlayPause();
-                boolean isPlaying = SpotifyPlaybackDispatcher.isPlaying();
-                btnPlayPauseTrack.setImageResource(isPlaying ? R.drawable.ic_pause_white : R.drawable.ic_play_white);
-            }
-        });
-
-        btnPrevTrack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SpotifyPlaybackDispatcher.skipPrevious();
-            }
-        });
-
-        btnNextTrack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SpotifyPlaybackDispatcher.skipNext();
-            }
-        });
     }
 
     private void setupSourceAppTiles() {
         btnManageApps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AppSelectionActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(MainActivity.this, AppSelectionActivity.class));
             }
         });
 
@@ -360,7 +276,7 @@ public class MainActivity extends Activity implements AppLogger.Listener {
     }
 
     private void togglePackage(String pkg) {
-        Set<String> selected = AppPreferences.getSelectedPackages(this);
+        Set<String> selected = new HashSet<>(AppPreferences.getSelectedPackages(this));
         if (selected.contains(pkg)) {
             selected.remove(pkg);
         } else {
@@ -368,7 +284,6 @@ public class MainActivity extends Activity implements AppLogger.Listener {
         }
         AppPreferences.saveSelectedPackages(this, selected);
         updateSourceBadges();
-        Toast.makeText(this, selected.contains(pkg) ? "App added to sync" : "App removed from sync", Toast.LENGTH_SHORT).show();
     }
 
     private void updateSourceBadges() {
@@ -383,22 +298,22 @@ public class MainActivity extends Activity implements AppLogger.Listener {
         tileNotificationAccess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
-                startActivity(intent);
+                startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
             }
         });
 
         tileSpotifyConnection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences prefs = getSharedPreferences(SpotifyPlaybackDispatcher.PREFS_NAME, Context.MODE_PRIVATE);
-                String clientId = prefs.getString(SpotifyPlaybackDispatcher.KEY_CLIENT_ID, "");
+                String clientId = inputClientId.getText().toString().trim();
                 if (TextUtils.isEmpty(clientId)) {
-                    switchTab(2);
-                    Toast.makeText(MainActivity.this, "Please enter your Spotify Client ID", Toast.LENGTH_SHORT).show();
+                    // Open settings so user can paste Client ID
+                    viewHomeTab.setVisibility(View.GONE);
+                    viewSettingsTab.setVisibility(View.VISIBLE);
                     inputClientId.requestFocus();
+                    Toast.makeText(MainActivity.this, "Please enter your Spotify Client ID", Toast.LENGTH_SHORT).show();
                 } else {
-                    SpotifyPlaybackDispatcher.connect(MainActivity.this, clientId, null);
+                    saveAndConnectSpotify();
                 }
             }
         });
@@ -414,14 +329,7 @@ public class MainActivity extends Activity implements AppLogger.Listener {
         btnConnectSdk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String clientId = inputClientId.getText().toString().trim();
-                if (TextUtils.isEmpty(clientId)) {
-                    Toast.makeText(MainActivity.this, "Please enter a valid Spotify Client ID", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                prefs.edit().putString(SpotifyPlaybackDispatcher.KEY_CLIENT_ID, clientId).apply();
-                AppLogger.log("Saved Client ID. Connecting to App Remote...");
-                SpotifyPlaybackDispatcher.connect(MainActivity.this, clientId, null);
+                saveAndConnectSpotify();
             }
         });
 
@@ -459,16 +367,17 @@ public class MainActivity extends Activity implements AppLogger.Listener {
         });
     }
 
-    private void showHelpDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("How NotiSpoti Works")
-                .setMessage("1. Grant Notification Access so NotiSpoti can detect song changes.\n\n" +
-                        "2. Create a free app at developer.spotify.com with package 'com.notispoti.app' and redirect URI 'com.notispoti.app://callback'.\n\n" +
-                        "3. Paste your Client ID and tap Save.\n\n" +
-                        "4. Keep Spotify running in the background (set battery to Unrestricted).\n\n" +
-                        "5. Play any song on YouTube Music or Obsidian — your Instagram Notes will update automatically!")
-                .setPositiveButton("Got It", null)
-                .show();
+    private void saveAndConnectSpotify() {
+        String clientId = inputClientId.getText().toString().trim();
+        if (TextUtils.isEmpty(clientId)) {
+            AppLogger.log("Please enter a valid Spotify Client ID.");
+            Toast.makeText(this, "Please enter a valid Spotify Client ID", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        SharedPreferences prefs = getSharedPreferences(SpotifyPlaybackDispatcher.PREFS_NAME, Context.MODE_PRIVATE);
+        prefs.edit().putString(SpotifyPlaybackDispatcher.KEY_CLIENT_ID, clientId).apply();
+        AppLogger.log("Saved Client ID. Connecting to App Remote...");
+        SpotifyPlaybackDispatcher.connect(MainActivity.this, clientId, null);
     }
 
     @Override
@@ -476,8 +385,14 @@ public class MainActivity extends Activity implements AppLogger.Listener {
         super.onResume();
         checkPermissions();
         updateSourceBadges();
+
         boolean isSyncOn = AppPreferences.isSyncEnabled(this);
+        if (masterSyncSwitch != null) {
+            masterSyncSwitch.setChecked(isSyncOn);
+        }
         updateMasterSyncUI(isSyncOn);
+
+        updateSpotifyStatusDisplay();
         AppLogger.setListener(this);
     }
 
@@ -489,9 +404,18 @@ public class MainActivity extends Activity implements AppLogger.Listener {
 
     private void checkPermissions() {
         boolean enabled = isNotificationListenerEnabled();
-        if (textNotificationStatus != null) {
-            textNotificationStatus.setText(enabled ? "Enabled" : "Tap to Grant");
-            textNotificationStatus.setTextColor(enabled ? 0xFF1ED760 : 0xFFFFB74D);
+        if (enabled) {
+            textNotificationStatus.setText("• Enabled");
+            textNotificationStatus.setTextColor(0xFF1ED760);
+            textNotificationDesc.setText("NotiSpoti can detect music from your selected apps");
+            textNotificationAction.setText("✓");
+            textNotificationAction.setTextColor(0xFF1ED760);
+        } else {
+            textNotificationStatus.setText("• Needs permission");
+            textNotificationStatus.setTextColor(0xFFFFAB00);
+            textNotificationDesc.setText("Allow notification access to detect your music");
+            textNotificationAction.setText("[Enable]");
+            textNotificationAction.setTextColor(0xFF1ED760);
         }
     }
 
@@ -499,6 +423,23 @@ public class MainActivity extends Activity implements AppLogger.Listener {
         String enabledListeners = Settings.Secure.getString(getContentResolver(), "enabled_notification_listeners");
         String myPackage = getPackageName();
         return (enabledListeners != null && enabledListeners.contains(myPackage));
+    }
+
+    private void updateSpotifyStatusDisplay() {
+        boolean connected = SpotifyPlaybackDispatcher.isConnected();
+        if (connected) {
+            textSpotifyStatus.setText("• Connected");
+            textSpotifyStatus.setTextColor(0xFF1ED760);
+            textSpotifyDesc.setText("Ready to sync music");
+            textSpotifyAction.setText("✓");
+            textSpotifyAction.setTextColor(0xFF1ED760);
+        } else {
+            textSpotifyStatus.setText("• Not connected");
+            textSpotifyStatus.setTextColor(0xFFFFAB00);
+            textSpotifyDesc.setText("Connect Spotify to start syncing");
+            textSpotifyAction.setText("[Connect]");
+            textSpotifyAction.setTextColor(0xFF1ED760);
+        }
     }
 
     private void performManualTest(final String query) {
@@ -512,7 +453,6 @@ public class MainActivity extends Activity implements AppLogger.Listener {
                     @Override
                     public void run() {
                         AppLogger.log("Manual match success: " + track.name + " (" + track.artist + ")");
-                        AppLogger.log("Spotify URI: " + track.uri);
                         AppLogger.updateState(track.name + " - " + track.artist, track.uri, "Spotify Resolved");
 
                         ComponentName comp = new ComponentName(MainActivity.this, MediaNotificationListenerService.class);
@@ -551,38 +491,40 @@ public class MainActivity extends Activity implements AppLogger.Listener {
 
     @Override
     public void onStateUpdated(String song, String spotifyUri, String dispatchStatus) {
-        if (song != null) {
-            if (song.contains(" - ")) {
-                String[] parts = song.split(" - ", 2);
-                if (detectedSongText != null) detectedSongText.setText(parts[0].trim());
-                if (detectedArtistText != null) detectedArtistText.setText(parts[1].trim());
-            } else {
-                if (detectedSongText != null) detectedSongText.setText(song);
-                if (detectedArtistText != null) detectedArtistText.setText("Playing via NotiSpoti");
+        if (song != null && !song.isEmpty()) {
+            if (detectedSongText != null) {
+                // Split title and artist if formatted as "Title - Artist"
+                if (song.contains(" - ")) {
+                    String[] parts = song.split(" - ", 2);
+                    detectedSongText.setText(parts[0].trim());
+                    if (detectedArtistText != null) {
+                        detectedArtistText.setText(parts[1].trim());
+                    }
+                } else {
+                    detectedSongText.setText(song);
+                    if (detectedArtistText != null) {
+                        detectedArtistText.setText("");
+                    }
+                }
             }
-        }
-        if (syncedBadgeText != null) {
-            if (dispatchStatus != null && dispatchStatus.contains("Playing")) {
+            if (syncedBadgeText != null) {
                 syncedBadgeText.setText("Synced to Spotify ✓");
-            } else if (dispatchStatus != null) {
-                syncedBadgeText.setText(dispatchStatus);
             }
-        }
-        if (btnPlayPauseTrack != null) {
-            btnPlayPauseTrack.setImageResource(R.drawable.ic_pause_white);
+        } else {
+            if (detectedSongText != null) {
+                detectedSongText.setText("No music detected");
+            }
+            if (detectedArtistText != null) {
+                detectedArtistText.setText("Play something in one of your selected apps.");
+            }
+            if (syncedBadgeText != null) {
+                syncedBadgeText.setText("Ready to sync");
+            }
         }
     }
 
     @Override
     public void onSdkStateUpdated(String statusText, int color) {
-        if (textSpotifyStatus != null) {
-            if (statusText != null && statusText.contains("Connected")) {
-                textSpotifyStatus.setText("Connected");
-                textSpotifyStatus.setTextColor(0xFF1ED760);
-            } else {
-                textSpotifyStatus.setText("Not Connected");
-                textSpotifyStatus.setTextColor(0xFFFFB74D);
-            }
-        }
+        updateSpotifyStatusDisplay();
     }
 }

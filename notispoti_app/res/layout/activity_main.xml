@@ -9,7 +9,6 @@
         android:id="@+id/mainScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottomNavBar"
         android:fillViewport="true"
         android:scrollbars="none">
 
@@ -19,7 +18,9 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Top Header Bar -->
+            <!-- A. HEADER BAR -->
+            <!-- [NotiSpoti logo] NotiSpoti               [Settings] -->
+            <!-- Subtitle: "Music from anywhere to Instagram Notes"  -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -28,8 +29,8 @@
                 android:layout_marginBottom="16dp">
 
                 <ImageView
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
                     android:src="@drawable/ic_launcher"
                     android:layout_marginRight="12dp" />
 
@@ -52,94 +53,101 @@
                         android:layout_height="wrap_content"
                         android:text="Music from anywhere to Instagram Notes"
                         android:textColor="#8E8E93"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:layout_marginTop="1dp" />
                 </LinearLayout>
 
                 <ImageButton
                     android:id="@+id/btnTopSettings"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/ic_settings"
                     android:background="@drawable/bg_circle_button"
                     android:scaleType="centerInside"
-                    android:layout_marginRight="8dp" />
-
-                <ImageButton
-                    android:id="@+id/btnTopHelp"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:src="@drawable/ic_help"
-                    android:background="@drawable/bg_circle_button"
-                    android:scaleType="centerInside" />
+                    android:contentDescription="Settings" />
             </LinearLayout>
 
-            <!-- VIEW CONTAINER: HOME TAB -->
+            <!-- ================================================= -->
+            <!-- HOME SCREEN MAIN CONTAINER                        -->
+            <!-- ================================================= -->
             <LinearLayout
                 android:id="@+id/viewHomeTab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- 1. Hero Feature Banner Card -->
+                <!-- B. MAIN SYNC CARD -->
+                <!-- ● ON                                              -->
+                <!-- Your music, everywhere.                           -->
+                <!-- "Automatically detects what you're listening to   -->
+                <!-- and syncs it to Spotify in the background."       -->
+                <!-- Large ON/OFF Switch                               -->
                 <LinearLayout
                     android:id="@+id/heroCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:background="@drawable/bg_hero_card"
-                    android:padding="16dp"
+                    android:padding="18dp"
                     android:layout_marginBottom="14dp">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
-                        <!-- Syncing Pill Chip -->
                         <TextView
                             android:id="@+id/heroSyncBadge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="● Syncing"
+                            android:text="● ON"
                             android:textColor="#1ED760"
-                            android:textSize="11sp"
+                            android:textSize="12sp"
                             android:textStyle="bold"
                             android:background="@drawable/bg_m3_chip_active"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
                             android:paddingTop="3dp"
-                            android:paddingBottom="3dp"
-                            android:layout_marginBottom="10dp" />
+                            android:paddingBottom="3dp" />
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:id="@+id/heroSyncSubStatus"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Your music, everywhere."
-                            android:textColor="#FFFFFF"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Automatically detects what you're listening to and plays it on Spotify in the background so it shows on your Instagram Notes."
-                            android:textColor="#A0B0A6"
+                            android:layout_weight="1"
+                            android:text="Syncing automatically"
+                            android:textColor="#1ED760"
                             android:textSize="12sp"
-                            android:layout_marginTop="6dp"
-                            android:lineSpacingExtra="2dp" />
+                            android:textStyle="bold"
+                            android:layout_marginLeft="10dp" />
+
+                        <Switch
+                            android:id="@+id/masterSyncSwitch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
-                    <!-- Flow Diagram Graphic -->
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="125dp"
-                        android:src="@drawable/flow_graphic"
-                        android:scaleType="fitCenter"
-                        android:layout_marginLeft="10dp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Your music, everywhere."
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="12dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Automatically detects what you're listening to and syncs it to Spotify in the background."
+                        android:textColor="#A0B0A6"
+                        android:textSize="13sp"
+                        android:lineSpacingExtra="3dp"
+                        android:layout_marginTop="6dp" />
                 </LinearLayout>
 
-                <!-- 2. Now Playing Card -->
+                <!-- C. NOW PLAYING CARD -->
                 <LinearLayout
                     android:id="@+id/nowPlayingCard"
                     android:layout_width="match_parent"
@@ -149,7 +157,6 @@
                     android:padding="16dp"
                     android:layout_marginBottom="14dp">
 
-                    <!-- Header Row: Waves + "Now Playing" and Status Chip -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -167,12 +174,11 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Now Playing"
+                            android:text="NOW PLAYING"
                             android:textColor="#1ED760"
-                            android:textSize="13sp"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
 
-                        <!-- Synced to Spotify Badge -->
                         <LinearLayout
                             android:id="@+id/syncedSpotifyBadge"
                             android:layout_width="wrap_content"
@@ -202,18 +208,16 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Song Content & Controls Row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
 
-                        <!-- Album Artwork Thumbnail -->
                         <ImageView
                             android:id="@+id/imgAlbumArt"
-                            android:layout_width="88dp"
-                            android:layout_height="88dp"
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
                             android:src="@drawable/bg_now_playing_thumb"
                             android:scaleType="centerCrop"
                             android:layout_marginRight="14dp" />
@@ -228,7 +232,7 @@
                                 android:id="@+id/detectedSongText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Pragmatic (Sped Up)"
+                                android:text="No music detected"
                                 android:textColor="#FFFFFF"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
@@ -239,89 +243,17 @@
                                 android:id="@+id/detectedArtistText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Navjaxx"
+                                android:text="Play something in one of your selected apps."
                                 android:textColor="#8E8E93"
                                 android:textSize="12sp"
+                                android:layout_marginTop="3dp"
                                 android:singleLine="true"
-                                android:ellipsize="end"
-                                android:layout_marginTop="2dp" />
-
-                            <!-- Thin Green Progress Bar -->
-                            <ProgressBar
-                                android:id="@+id/playerProgressBar"
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="match_parent"
-                                android:layout_height="4dp"
-                                android:progress="45"
-                                android:max="100"
-                                android:progressTint="#1ED760"
-                                android:progressBackgroundTint="#2C3530"
-                                android:layout_marginTop="10dp" />
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:layout_marginTop="3dp">
-
-                                <TextView
-                                    android:id="@+id/textTimeElapsed"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="1:12"
-                                    android:textColor="#66726B"
-                                    android:textSize="10sp" />
-
-                                <TextView
-                                    android:id="@+id/textTimeTotal"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="2:48"
-                                    android:textColor="#66726B"
-                                    android:textSize="10sp" />
-                            </LinearLayout>
-
-                            <!-- Playback Control Buttons Row -->
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:gravity="center"
-                                android:layout_marginTop="8dp">
-
-                                <ImageButton
-                                    android:id="@+id/btnPrevTrack"
-                                    android:layout_width="34dp"
-                                    android:layout_height="34dp"
-                                    android:src="@drawable/ic_prev"
-                                    android:background="@drawable/bg_circle_button"
-                                    android:scaleType="centerInside"
-                                    android:layout_marginRight="14dp" />
-
-                                <ImageButton
-                                    android:id="@+id/btnPlayPauseTrack"
-                                    android:layout_width="42dp"
-                                    android:layout_height="42dp"
-                                    android:src="@drawable/ic_pause_white"
-                                    android:background="@drawable/bg_circle_button"
-                                    android:scaleType="centerInside"
-                                    android:layout_marginRight="14dp" />
-
-                                <ImageButton
-                                    android:id="@+id/btnNextTrack"
-                                    android:layout_width="34dp"
-                                    android:layout_height="34dp"
-                                    android:src="@drawable/ic_next"
-                                    android:background="@drawable/bg_circle_button"
-                                    android:scaleType="centerInside" />
-                            </LinearLayout>
-
+                                android:ellipsize="end" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- 3. Source Apps Card Section -->
+                <!-- D. SOURCE APPS SECTION -->
                 <LinearLayout
                     android:id="@+id/sourceAppsSection"
                     android:layout_width="match_parent"
@@ -349,38 +281,38 @@
                                 android:layout_height="wrap_content"
                                 android:text="Source Apps"
                                 android:textColor="#FFFFFF"
-                                android:textSize="15sp"
+                                android:textSize="16sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Select which music apps to sync from"
+                                android:text="Choose which apps NotiSpoti listens to"
                                 android:textColor="#8E8E93"
-                                android:textSize="11sp" />
+                                android:textSize="11sp"
+                                android:layout_marginTop="1dp" />
                         </LinearLayout>
 
                         <Button
                             android:id="@+id/btnManageApps"
                             android:layout_width="wrap_content"
                             android:layout_height="32dp"
-                            android:text="⚙ Manage ›"
+                            android:text="Manage ›"
                             android:textColor="#FFFFFF"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:background="@drawable/bg_m3_pill_secondary"
-                            android:paddingLeft="12dp"
-                            android:paddingRight="12dp" />
+                            android:paddingLeft="14dp"
+                            android:paddingRight="14dp" />
                     </LinearLayout>
 
-                    <!-- Horizontal Grid of Source Apps -->
+                    <!-- Compact Quick-Toggle App Cards -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="12dp">
+                        android:orientation="horizontal">
 
-                        <!-- App 1: YouTube Music -->
+                        <!-- YouTube Music -->
                         <LinearLayout
                             android:id="@+id/cardSourceYt"
                             android:layout_width="0dp"
@@ -390,7 +322,9 @@
                             android:gravity="center"
                             android:background="@drawable/bg_app_source_card"
                             android:padding="10dp"
-                            android:layout_marginRight="6dp">
+                            android:layout_marginRight="6dp"
+                            android:clickable="true"
+                            android:focusable="true">
 
                             <RelativeLayout
                                 android:layout_width="38dp"
@@ -421,7 +355,7 @@
                                 android:layout_marginTop="4dp" />
                         </LinearLayout>
 
-                        <!-- App 2: Obsidian -->
+                        <!-- Obsidian -->
                         <LinearLayout
                             android:id="@+id/cardSourceObsidian"
                             android:layout_width="0dp"
@@ -431,7 +365,9 @@
                             android:gravity="center"
                             android:background="@drawable/bg_app_source_card"
                             android:padding="10dp"
-                            android:layout_marginRight="6dp">
+                            android:layout_marginRight="6dp"
+                            android:clickable="true"
+                            android:focusable="true">
 
                             <RelativeLayout
                                 android:layout_width="38dp"
@@ -462,7 +398,7 @@
                                 android:layout_marginTop="4dp" />
                         </LinearLayout>
 
-                        <!-- App 3: Music -->
+                        <!-- Music Player -->
                         <LinearLayout
                             android:id="@+id/cardSourceMusic"
                             android:layout_width="0dp"
@@ -472,7 +408,9 @@
                             android:gravity="center"
                             android:background="@drawable/bg_app_source_card"
                             android:padding="10dp"
-                            android:layout_marginRight="6dp">
+                            android:layout_marginRight="6dp"
+                            android:clickable="true"
+                            android:focusable="true">
 
                             <RelativeLayout
                                 android:layout_width="38dp"
@@ -503,7 +441,7 @@
                                 android:layout_marginTop="4dp" />
                         </LinearLayout>
 
-                        <!-- App 4: Obsidian Music -->
+                        <!-- Obsidian Music Alt -->
                         <LinearLayout
                             android:id="@+id/cardSourceCustom"
                             android:layout_width="0dp"
@@ -512,7 +450,9 @@
                             android:orientation="vertical"
                             android:gravity="center"
                             android:background="@drawable/bg_app_source_card"
-                            android:padding="10dp">
+                            android:padding="10dp"
+                            android:clickable="true"
+                            android:focusable="true">
 
                             <RelativeLayout
                                 android:layout_width="38dp"
@@ -535,7 +475,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Obsidian Music"
+                                android:text="Obsidian Alt"
                                 android:textColor="#E0E0E0"
                                 android:textSize="10sp"
                                 android:singleLine="true"
@@ -543,117 +483,162 @@
                                 android:layout_marginTop="4dp" />
                         </LinearLayout>
                     </LinearLayout>
+                </LinearLayout>
 
-                    <!-- Status Quick Tiles: Notification Access & Spotify Link -->
+                <!-- 3. CONNECTION STATUS -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <!-- Notifications Card -->
                     <LinearLayout
+                        android:id="@+id/tileNotificationAccess"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_status_tile"
+                        android:padding="14dp"
+                        android:layout_marginBottom="8dp"
+                        android:clickable="true"
+                        android:focusable="true">
 
-                        <!-- Tile 1: Notification Access -->
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_bell"
+                            android:layout_marginRight="12dp" />
+
                         <LinearLayout
-                            android:id="@+id/tileNotificationAccess"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:background="@drawable/bg_status_tile"
-                            android:padding="12dp"
-                            android:layout_marginRight="6dp">
-
-                            <ImageView
-                                android:layout_width="26dp"
-                                android:layout_height="26dp"
-                                android:src="@drawable/ic_bell"
-                                android:layout_marginRight="8dp" />
+                            android:orientation="vertical">
 
                             <LinearLayout
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Notification Access"
+                                    android:text="Notifications"
                                     android:textColor="#FFFFFF"
-                                    android:textSize="11sp"
-                                    android:textStyle="bold"
-                                    android:singleLine="true" />
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
 
                                 <TextView
                                     android:id="@+id/textNotificationStatus"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Enabled"
+                                    android:text="• Enabled"
                                     android:textColor="#1ED760"
-                                    android:textSize="11sp" />
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:layout_marginLeft="8dp" />
                             </LinearLayout>
 
                             <TextView
+                                android:id="@+id/textNotificationDesc"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="›"
+                                android:text="NotiSpoti can detect music from your selected apps"
                                 android:textColor="#8E8E93"
-                                android:textSize="16sp"
-                                android:layout_marginLeft="4dp" />
+                                android:textSize="11sp"
+                                android:layout_marginTop="2dp" />
                         </LinearLayout>
 
-                        <!-- Tile 2: Spotify Connection -->
+                        <TextView
+                            android:id="@+id/textNotificationAction"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="✓"
+                            android:textColor="#1ED760"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="8dp" />
+                    </LinearLayout>
+
+                    <!-- Spotify Connection Card -->
+                    <LinearLayout
+                        android:id="@+id/tileSpotifyConnection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_status_tile"
+                        android:padding="14dp"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_spotify_small"
+                            android:layout_marginRight="12dp" />
+
                         <LinearLayout
-                            android:id="@+id/tileSpotifyConnection"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:background="@drawable/bg_status_tile"
-                            android:padding="12dp">
-
-                            <ImageView
-                                android:layout_width="26dp"
-                                android:layout_height="26dp"
-                                android:src="@drawable/ic_spotify_small"
-                                android:layout_marginRight="8dp" />
+                            android:orientation="vertical">
 
                             <LinearLayout
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Spotify Connection"
+                                    android:text="Spotify"
                                     android:textColor="#FFFFFF"
-                                    android:textSize="11sp"
-                                    android:textStyle="bold"
-                                    android:singleLine="true" />
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
 
                                 <TextView
                                     android:id="@+id/textSpotifyStatus"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Connected"
+                                    android:text="• Connected"
                                     android:textColor="#1ED760"
-                                    android:textSize="11sp" />
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:layout_marginLeft="8dp" />
                             </LinearLayout>
 
                             <TextView
+                                android:id="@+id/textSpotifyDesc"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="›"
+                                android:text="Ready to sync music"
                                 android:textColor="#8E8E93"
-                                android:textSize="16sp"
-                                android:layout_marginLeft="4dp" />
+                                android:textSize="11sp"
+                                android:layout_marginTop="2dp" />
                         </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/textSpotifyAction"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="✓"
+                            android:textColor="#1ED760"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="8dp" />
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- 4. Big Floating / Bottom Master Sync Action Banner -->
+                <!-- 4. PRIMARY ACTION BUTTON -->
+                <!-- Large bottom action/status button: -->
+                <!-- Active: SYNC IS ACTIVE / Listening and syncing automatically -->
+                <!-- Disabled: START SYNC / Start listening for music -->
+                <!-- Uses circular sync arrows, NOT media play button! -->
                 <LinearLayout
                     android:id="@+id/bannerMasterSync"
                     android:layout_width="match_parent"
@@ -661,17 +646,18 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:background="@drawable/bg_master_active_banner"
-                    android:paddingLeft="18dp"
-                    android:paddingRight="18dp"
-                    android:layout_marginBottom="16dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:layout_marginBottom="24dp"
                     android:clickable="true"
                     android:focusable="true">
 
                     <ImageView
-                        android:id="@+id/imgMasterSyncPlay"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_play_black"
+                        android:id="@+id/imgMasterSyncIcon"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_sync"
+                        android:tint="#000000"
                         android:layout_marginRight="14dp" />
 
                     <LinearLayout
@@ -684,10 +670,11 @@
                             android:id="@+id/textMasterSyncTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Sync is Active"
+                            android:text="SYNC IS ACTIVE"
                             android:textColor="#000000"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.05" />
 
                         <TextView
                             android:id="@+id/textMasterSyncSub"
@@ -697,19 +684,13 @@
                             android:textColor="#0A3816"
                             android:textSize="12sp" />
                     </LinearLayout>
-
-                    <!-- Ripple Waves Concentric Indicator -->
-                    <ImageView
-                        android:id="@+id/imgRadarRipple"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_waves"
-                        android:tint="#0A3816" />
                 </LinearLayout>
 
             </LinearLayout>
 
-            <!-- VIEW CONTAINER: SETTINGS & DEVELOPER TOOLS TAB -->
+            <!-- ================================================= -->
+            <!-- SETTINGS & DEVELOPER TOOLS (Toggled by Settings)  -->
+            <!-- ================================================= -->
             <LinearLayout
                 android:id="@+id/viewSettingsTab"
                 android:layout_width="match_parent"
@@ -717,14 +698,33 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="SETTINGS &amp; DEVELOPER TOOLS"
-                    android:textColor="#1ED760"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="12dp" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <Button
+                        android:id="@+id/btnBackFromSettings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="← Back to Home"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:background="@drawable/bg_m3_pill_secondary"
+                        android:paddingLeft="14dp"
+                        android:paddingRight="14dp"
+                        android:layout_marginRight="10dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Settings &amp; Developer Tools"
+                        android:textColor="#FFFFFF"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <!-- Spotify Credentials Card -->
                 <LinearLayout
@@ -911,101 +911,5 @@
 
         </LinearLayout>
     </ScrollView>
-
-    <!-- Bottom Navigation Bar (Fixed at Bottom) -->
-    <LinearLayout
-        android:id="@+id/bottomNavBar"
-        android:layout_width="match_parent"
-        android:layout_height="62dp"
-        android:layout_alignParentBottom="true"
-        android:background="#0C120E"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <!-- Tab 1: Home -->
-        <LinearLayout
-            android:id="@+id/tabHome"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:id="@+id/iconTabHome"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_home"
-                android:tint="#1ED760" />
-
-            <TextView
-                android:id="@+id/textTabHome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Home"
-                android:textColor="#1ED760"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:layout_marginTop="2dp" />
-        </LinearLayout>
-
-        <!-- Tab 2: Source Apps -->
-        <LinearLayout
-            android:id="@+id/tabSourceApps"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:id="@+id/iconTabApps"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_apps"
-                android:tint="#8E8E93" />
-
-            <TextView
-                android:id="@+id/textTabApps"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Source Apps"
-                android:textColor="#8E8E93"
-                android:textSize="11sp"
-                android:layout_marginTop="2dp" />
-        </LinearLayout>
-
-        <!-- Tab 3: Settings -->
-        <LinearLayout
-            android:id="@+id/tabSettings"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:id="@+id/iconTabSettings"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_settings"
-                android:tint="#8E8E93" />
-
-            <TextView
-                android:id="@+id/textTabSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Settings"
-                android:textColor="#8E8E93"
-                android:textSize="11sp"
-                android:layout_marginTop="2dp" />
-        </LinearLayout>
-    </LinearLayout>
 
 </RelativeLayout>
