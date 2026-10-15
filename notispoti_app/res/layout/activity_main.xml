@@ -1,295 +1,527 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#121212"
-    android:padding="14dp">
+    android:fillViewport="true">
 
-    <!-- Header -->
-    <TextView
-        android:id="@+id/titleHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="NotiSpoti"
-        android:textColor="#1DB954"
-        android:textSize="22sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/subHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="YT Music / Obsidian → Silent Spotify Sync"
-        android:textColor="#B3B3B3"
-        android:textSize="12sp"
-        android:layout_marginBottom="12dp" />
-
-    <!-- Master Sync Switch Card -->
     <LinearLayout
-        android:id="@+id/masterSwitchLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:background="#1E1E1E"
-        android:padding="12dp"
-        android:layout_marginBottom="10dp">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/masterSwitchTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sync Engine: ACTIVE"
-                android:textColor="#00E676"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/masterSwitchSubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Syncing tracks to Spotify in background"
-                android:textColor="#888888"
-                android:textSize="11sp" />
-        </LinearLayout>
-
-        <Switch
-            android:id="@+id/masterSyncSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <!-- Permission Banner / Button -->
-    <LinearLayout
-        android:id="@+id/permissionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#282828"
-        android:padding="10dp"
-        android:layout_marginBottom="10dp">
+        android:padding="16dp">
 
-        <TextView
-            android:id="@+id/permissionStatusText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Checking Notification Access..."
-            android:textColor="#FFFFFF"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/btnGrantPermission"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Enable Notification Listener"
-            android:textSize="12sp"
-            android:visibility="gone"
-            android:layout_marginTop="6dp" />
-    </LinearLayout>
-
-    <!-- Spotify App Remote SDK Configuration Card -->
-    <LinearLayout
-        android:id="@+id/sdkConfigLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="#202020"
-        android:padding="10dp"
-        android:layout_marginBottom="10dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="SPOTIFY APP REMOTE SDK (HEADLESS)"
-            android:textColor="#1DB954"
-            android:textSize="11sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/sdkStatusText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="SDK State: Not Connected"
-            android:textColor="#FFCA28"
-            android:textSize="12sp"
-            android:layout_marginTop="2dp" />
-
+        <!-- Top App Bar (Branding + Developer Mode Toggle) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="6dp">
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
 
-            <EditText
-                android:id="@+id/inputClientId"
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_launcher"
+                android:layout_marginRight="12dp" />
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Paste Spotify Client ID"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#777777"
-                android:textSize="11sp"
-                android:singleLine="true" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/titleHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NotiSpoti"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/subHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Instagram Notes Music Sync"
+                    android:textColor="#8E8E93"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
             <Button
-                android:id="@+id/btnConnectSdk"
+                android:id="@+id/btnToggleDevMode"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Connect"
-                android:textSize="11sp" />
+                android:layout_height="34dp"
+                android:text="🛠 Dev Mode"
+                android:textColor="#A0A0A0"
+                android:textSize="11sp"
+                android:background="@drawable/bg_m3_pill_secondary"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/sdkHelpText"
+        <!-- Hero Card: Master Sync Engine Switch -->
+        <LinearLayout
+            android:id="@+id/masterSwitchLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Pkg: com.notispoti.app\nSHA1: C8:DD:03:A6:25:54:60:C1:5D:D1:B6:E3:F0:31:D1:2F:84:1B:59:AF"
-            android:textColor="#888888"
-            android:textSize="9sp"
-            android:typeface="monospace"
-            android:layout_marginTop="4dp" />
-    </LinearLayout>
+            android:orientation="vertical"
+            android:background="@drawable/bg_m3_card_active"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp">
 
-    <!-- Source Apps Filter Card -->
-    <LinearLayout
-        android:id="@+id/sourceAppsLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="#202020"
-        android:padding="10dp"
-        android:layout_marginBottom="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
+                <TextView
+                    android:id="@+id/masterSwitchBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="● ACTIVE"
+                    android:textColor="#1DB954"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_m3_chip_active"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <Switch
+                    android:id="@+id/masterSyncSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/masterSwitchTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Silent Sync Engine"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/masterSwitchSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Intercepts music from selected apps and syncs to Spotify in the background for Instagram Notes."
+                android:textColor="#A0AFA6"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- Live Detection & Now Playing Card -->
+        <LinearLayout
+            android:id="@+id/liveStatusLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_m3_card"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="6dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="NOW PLAYING"
+                    android:textColor="#1DB954"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/dispatchStatusText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Waiting for music..."
+                    android:textColor="#80D8FF"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/detectedSongText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No song detected"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/spotifyMatchText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Spotify URI: -"
+                android:textColor="#66726B"
+                android:textSize="11sp"
+                android:typeface="monospace"
+                android:layout_marginTop="3dp" />
+        </LinearLayout>
+
+        <!-- Setup Checklist Section Header -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="SOURCE APPS FILTER"
-            android:textColor="#1DB954"
+            android:text="SETUP &amp; STATUS"
+            android:textColor="#8E8E93"
             android:textSize="11sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
 
-        <TextView
-            android:id="@+id/selectedAppsStatusText"
+        <!-- Setup Card 1: Notification Access -->
+        <LinearLayout
+            android:id="@+id/permissionCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Loading selected apps..."
-            android:textColor="#E0E0E0"
-            android:textSize="12sp"
-            android:layout_marginTop="2dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_m3_card"
+            android:padding="14dp"
+            android:layout_marginBottom="10dp">
 
-        <Button
-            android:id="@+id/btnManageApps"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1. Notification Access"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/permissionStatusText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Checking access..."
+                    android:textColor="#00E676"
+                    android:textSize="12sp"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnGrantPermission"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Enable"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_m3_pill_button"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <!-- Setup Card 2: Spotify Link -->
+        <LinearLayout
+            android:id="@+id/sdkCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Select Source Apps"
-            android:textSize="11sp"
-            android:layout_marginTop="6dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_m3_card"
+            android:padding="14dp"
+            android:layout_marginBottom="10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2. Spotify Remote Link"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/sdkStatusText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SDK State: Checking..."
+                    android:textColor="#FFCA28"
+                    android:textSize="12sp"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnQuickConnectSdk"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Connect"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_m3_pill_button"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp" />
+        </LinearLayout>
+
+        <!-- Setup Card 3: Source Apps Whitelist -->
+        <LinearLayout
+            android:id="@+id/sourceAppsCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_m3_card"
+            android:padding="14dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3. Source Music Apps"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/selectedAppsStatusText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Syncing from 2 apps (YouTube Music, Obsidian)"
+                android:textColor="#A0A0A0"
+                android:textSize="12sp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="8dp" />
+
+            <Button
+                android:id="@+id/btnManageApps"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Select Source Apps →"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:background="@drawable/bg_m3_pill_secondary"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp" />
+        </LinearLayout>
+
+        <!-- DEVELOPER & DIAGNOSTICS SECTION (Hidden by default, expandable) -->
+        <LinearLayout
+            android:id="@+id/layoutDevMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="DEVELOPER DIAGNOSTICS &amp; TOOLS"
+                android:textColor="#1DB954"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Spotify Client ID & Keystore Configuration Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_m3_card"
+                android:padding="14dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Spotify Developer Credentials"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="8dp">
+
+                    <EditText
+                        android:id="@+id/inputClientId"
+                        android:layout_width="0dp"
+                        android:layout_height="42dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_m3_input"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:hint="Paste Spotify Client ID"
+                        android:textColor="#FFFFFF"
+                        android:textColorHint="#66726B"
+                        android:textSize="11sp"
+                        android:singleLine="true" />
+
+                    <Button
+                        android:id="@+id/btnConnectSdk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="38dp"
+                        android:text="Save"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:background="@drawable/bg_m3_pill_button"
+                        android:paddingLeft="14dp"
+                        android:paddingRight="14dp"
+                        android:layout_marginLeft="8dp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/sdkHelpText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Pkg: com.notispoti.app\nSHA1: C8:DD:03:A6:25:54:60:C1:5D:D1:B6:E3:F0:31:D1:2F:84:1B:59:AF"
+                    android:textColor="#888888"
+                    android:textSize="9sp"
+                    android:typeface="monospace"
+                    android:layout_marginTop="8dp" />
+
+                <Button
+                    android:id="@+id/btnCopySha1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:text="Copy SHA-1 Fingerprint"
+                    android:textColor="#A0A0A0"
+                    android:textSize="10sp"
+                    android:background="@drawable/bg_m3_pill_secondary"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:layout_marginTop="6dp" />
+            </LinearLayout>
+
+            <!-- Manual Track Resolver Test -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_m3_card"
+                android:padding="14dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Simulate Song Sync"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="8dp">
+
+                    <EditText
+                        android:id="@+id/inputTestSong"
+                        android:layout_width="0dp"
+                        android:layout_height="42dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_m3_input"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:hint="Song - Artist (e.g. Starboy)"
+                        android:textColor="#FFFFFF"
+                        android:textColorHint="#66726B"
+                        android:textSize="12sp"
+                        android:singleLine="true" />
+
+                    <Button
+                        android:id="@+id/btnTestResolve"
+                        android:layout_width="wrap_content"
+                        android:layout_height="38dp"
+                        android:text="Test Sync"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:background="@drawable/bg_m3_pill_secondary"
+                        android:paddingLeft="14dp"
+                        android:paddingRight="14dp"
+                        android:layout_marginLeft="8dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Real-Time Monospace Console Log Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_m3_card"
+                android:padding="14dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="6dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="REAL-TIME IPC LOG CONSOLE"
+                        android:textColor="#888888"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btnClearLogs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:text="Clear"
+                        android:textColor="#888888"
+                        android:textSize="10sp"
+                        android:background="@drawable/bg_m3_pill_secondary"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp" />
+                </LinearLayout>
+
+                <ScrollView
+                    android:id="@+id/logScrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:background="#0A0C0B"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:id="@+id/logTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#00E676"
+                        android:textSize="10sp"
+                        android:typeface="monospace" />
+                </ScrollView>
+            </LinearLayout>
+
+        </LinearLayout>
+
     </LinearLayout>
-
-    <!-- Live Detection Card -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="#181818"
-        android:padding="10dp"
-        android:layout_marginBottom="10dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="ACTIVE DETECTION"
-            android:textColor="#1DB954"
-            android:textSize="11sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/detectedSongText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Song: (Waiting for music...)"
-            android:textColor="#FFFFFF"
-            android:textSize="13sp"
-            android:layout_marginTop="2dp" />
-
-        <TextView
-            android:id="@+id/spotifyMatchText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Spotify URI: -"
-            android:textColor="#A7A7A7"
-            android:textSize="12sp"
-            android:typeface="monospace" />
-
-        <TextView
-            android:id="@+id/dispatchStatusText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Spotify Background State: Idle"
-            android:textColor="#80D8FF"
-            android:textSize="12sp"
-            android:layout_marginTop="2dp" />
-    </LinearLayout>
-
-    <!-- Manual Test Bar -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="6dp">
-
-        <EditText
-            android:id="@+id/inputTestSong"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Song - Artist (e.g. Blinding Lights)"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#666666"
-            android:textSize="12sp"
-            android:singleLine="true" />
-
-        <Button
-            android:id="@+id/btnTestResolve"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Test Sync"
-            android:textSize="12sp" />
-    </LinearLayout>
-
-    <!-- Log Window -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="REAL-TIME LOG"
-        android:textColor="#888888"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="2dp" />
-
-    <ScrollView
-        android:id="@+id/logScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="#0A0A0A"
-        android:padding="6dp">
-
-        <TextView
-            android:id="@+id/logTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#00E676"
-            android:textSize="10sp"
-            android:typeface="monospace" />
-    </ScrollView>
-
-</LinearLayout>
+</ScrollView>

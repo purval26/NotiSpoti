@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+
+    <!-- Dark Background Squircle -->
+    <path
+        android:fillColor="#151A17"
+        android:pathData="M 128,24 L 384,24 A 104,104 0 0,1 488,128 L 488,384 A 104,104 0 0,1 384,488 L 128,488 A 104,104 0 0,1 24,384 L 24,128 A 104,104 0 0,1 128,24 Z" />
+
+    <!-- Emerald Border Accent -->
+    <path
+        android:strokeColor="#2C3D32"
+        android:strokeWidth="5"
+        android:fillColor="#00000000"
+        android:pathData="M 128,24 L 384,24 A 104,104 0 0,1 488,128 L 488,384 A 104,104 0 0,1 384,488 L 128,488 A 104,104 0 0,1 24,384 L 24,128 A 104,104 0 0,1 128,24 Z" />
+
+    <!-- Outer Sound Broadcast Wave (Spotify Heritage) -->
+    <path
+        android:strokeColor="#1ED760"
+        android:strokeWidth="20"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M 125,150 C 205,110 310,110 390,150" />
+
+    <!-- Mid Sound Broadcast Wave (White Accent) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="15"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M 152,185 C 215,152 300,152 363,185" />
+
+    <!-- Sync Pulse Dot -->
+    <path
+        android:fillColor="#1ED760"
+        android:pathData="M 256,92 A 8,8 0 1,1 256,108 A 8,8 0 1,1 256,92 Z" />
+
+    <!-- Music Note Beam -->
+    <path
+        android:fillColor="#1DB954"
+        android:pathData="M 204,175 L 360,133 L 360,152 L 204,194 Z" />
+
+    <!-- Left Stem -->
+    <path
+        android:fillColor="#1ED760"
+        android:pathData="M 204,170 L 220,166 L 220,340 L 204,340 Z" />
+
+    <!-- Right Stem -->
+    <path
+        android:fillColor="#1ED760"
+        android:pathData="M 344,128 L 360,124 L 360,295 L 344,295 Z" />
+
+    <!-- Left Note Head (Rotated Ellipse approximated) -->
+    <path
+        android:fillColor="#1ED760"
+        android:pathData="M 180,310 C 205,310 226,324 226,342 C 226,360 205,372 180,372 C 155,372 134,360 134,342 C 134,324 155,310 180,310 Z" />
+
+    <!-- Right Note Head -->
+    <path
+        android:fillColor="#1ED760"
+        android:pathData="M 320,265 C 345,265 366,279 366,297 C 366,315 345,327 320,327 C 295,327 274,315 274,297 C 274,279 295,265 320,265 Z" />
+
+</vector>

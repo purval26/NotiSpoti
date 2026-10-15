@@ -1,6 +1,8 @@
 package com.notispoti.app;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -12,31 +14,53 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends Activity implements AppLogger.Listener {
 
+    private static final String SHA1_FINGERPRINT = "C8:DD:03:A6:25:54:60:C1:5D:D1:B6:E3:F0:31:D1:2F:84:1B:59:AF";
+
+    // Top Bar & Dev Mode
+    private Button btnToggleDevMode;
+    private LinearLayout layoutDevMode;
+
+    // Hero Master Switch Card
+    private LinearLayout masterSwitchLayout;
+    private TextView masterSwitchBadge;
     private Switch masterSyncSwitch;
     private TextView masterSwitchTitle;
     private TextView masterSwitchSubtitle;
 
+    // Live Detection Card
+    private TextView detectedSongText;
+    private TextView spotifyMatchText;
+    private TextView dispatchStatusText;
+
+    // Setup Checklist Cards
     private TextView permissionStatusText;
     private Button btnGrantPermission;
 
     private TextView sdkStatusText;
-    private EditText inputClientId;
-    private Button btnConnectSdk;
+    private Button btnQuickConnectSdk;
 
     private TextView selectedAppsStatusText;
     private Button btnManageApps;
 
-    private TextView detectedSongText;
-    private TextView spotifyMatchText;
-    private TextView dispatchStatusText;
+    // Developer Section
+    private EditText inputClientId;
+    private Button btnConnectSdk;
+    private Button btnCopySha1;
     private EditText inputTestSong;
     private Button btnTestResolve;
+    private Button btnClearLogs;
     private ScrollView logScrollView;
     private TextView logTextView;
 
@@ -47,6 +71,29 @@ public class MainActivity extends Activity implements AppLogger.Listener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Top Bar & Dev Mode Toggle
+        btnToggleDevMode = findViewById(R.id.btnToggleDevMode);
+        layoutDevMode = findViewById(R.id.layoutDevMode);
+
+        boolean isDev = AppPreferences.isDeveloperMode(this);
+        setDevModeVisible(isDev);
+
+        btnToggleDevMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean currentlyDev = (layoutDevMode.getVisibility() == View.VISIBLE);
+                boolean newDev = !currentlyDev;
+                AppPreferences.setDeveloperMode(MainActivity.this, newDev);
+                setDevModeVisible(newDev);
+                Toast.makeText(MainActivity.this,
+                        newDev ? "Developer mode enabled" : "Developer mode hidden",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Hero Master Switch Card
+        masterSwitchLayout = findViewById(R.id.masterSwitchLayout);
+        masterSwitchBadge = findViewById(R.id.masterSwitchBadge);
         masterSyncSwitch = findViewById(R.id.masterSyncSwitch);
         masterSwitchTitle = findViewById(R.id.masterSwitchTitle);
         masterSwitchSubtitle = findViewById(R.id.masterSwitchSubtitle);
@@ -64,21 +111,26 @@ public class MainActivity extends Activity implements AppLogger.Listener {
             }
         });
 
-        permissionStatusText = findViewById(R.id.permissionStatusText);
-        btnGrantPermission = findViewById(R.id.btnGrantPermission);
-
-        sdkStatusText = findViewById(R.id.sdkStatusText);
-        inputClientId = findViewById(R.id.inputClientId);
-        btnConnectSdk = findViewById(R.id.btnConnectSdk);
-
-        selectedAppsStatusText = findViewById(R.id.selectedAppsStatusText);
-        btnManageApps = findViewById(R.id.btnManageApps);
-
+        // Live Detection Card
         detectedSongText = findViewById(R.id.detectedSongText);
         spotifyMatchText = findViewById(R.id.spotifyMatchText);
         dispatchStatusText = findViewById(R.id.dispatchStatusText);
+
+        // Setup Checklist Cards
+        permissionStatusText = findViewById(R.id.permissionStatusText);
+        btnGrantPermission = findViewById(R.id.btnGrantPermission);
+        sdkStatusText = findViewById(R.id.sdkStatusText);
+        btnQuickConnectSdk = findViewById(R.id.btnQuickConnectSdk);
+        selectedAppsStatusText = findViewById(R.id.selectedAppsStatusText);
+        btnManageApps = findViewById(R.id.btnManageApps);
+
+        // Developer Section Controls
+        inputClientId = findViewById(R.id.inputClientId);
+        btnConnectSdk = findViewById(R.id.btnConnectSdk);
+        btnCopySha1 = findViewById(R.id.btnCopySha1);
         inputTestSong = findViewById(R.id.inputTestSong);
         btnTestResolve = findViewById(R.id.btnTestResolve);
+        btnClearLogs = findViewById(R.id.btnClearLogs);
         logScrollView = findViewById(R.id.logScrollView);
         logTextView = findViewById(R.id.logTextView);
 
@@ -108,14 +160,35 @@ public class MainActivity extends Activity implements AppLogger.Listener {
         btnConnectSdk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saveAndConnectSpotify();
+            }
+        });
+
+        btnQuickConnectSdk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 String clientId = inputClientId.getText().toString().trim();
                 if (TextUtils.isEmpty(clientId)) {
-                    AppLogger.log("Please enter a valid Spotify Client ID.");
-                    return;
+                    // Open Developer Mode so user can input Client ID
+                    setDevModeVisible(true);
+                    AppPreferences.setDeveloperMode(MainActivity.this, true);
+                    Toast.makeText(MainActivity.this, "Please enter your Spotify Client ID below", Toast.LENGTH_LONG).show();
+                    inputClientId.requestFocus();
+                } else {
+                    saveAndConnectSpotify();
                 }
-                prefs.edit().putString(SpotifyPlaybackDispatcher.KEY_CLIENT_ID, clientId).apply();
-                AppLogger.log("Saved Client ID. Connecting to App Remote...");
-                SpotifyPlaybackDispatcher.connect(MainActivity.this, clientId, null);
+            }
+        });
+
+        btnCopySha1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("NotiSpoti SHA-1", SHA1_FINGERPRINT);
+                if (clipboard != null) {
+                    clipboard.setPrimaryClip(clip);
+                    Toast.makeText(MainActivity.this, "SHA-1 copied to clipboard!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -131,7 +204,39 @@ public class MainActivity extends Activity implements AppLogger.Listener {
             }
         });
 
+        btnClearLogs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (logTextView != null) {
+                    logTextView.setText("");
+                }
+            }
+        });
+
         AppLogger.log("NotiSpoti initialized. Ready for silent background sync.");
+    }
+
+    private void setDevModeVisible(boolean visible) {
+        if (layoutDevMode != null) {
+            layoutDevMode.setVisibility(visible ? View.VISIBLE : View.GONE);
+        }
+        if (btnToggleDevMode != null) {
+            btnToggleDevMode.setText(visible ? "🛠 Dev: ON" : "🛠 Dev Mode");
+            btnToggleDevMode.setTextColor(visible ? 0xFF1DB954 : 0xFFA0A0A0);
+        }
+    }
+
+    private void saveAndConnectSpotify() {
+        String clientId = inputClientId.getText().toString().trim();
+        if (TextUtils.isEmpty(clientId)) {
+            AppLogger.log("Please enter a valid Spotify Client ID.");
+            Toast.makeText(this, "Please enter a valid Spotify Client ID", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        SharedPreferences prefs = getSharedPreferences(SpotifyPlaybackDispatcher.PREFS_NAME, Context.MODE_PRIVATE);
+        prefs.edit().putString(SpotifyPlaybackDispatcher.KEY_CLIENT_ID, clientId).apply();
+        AppLogger.log("Saved Client ID. Connecting to App Remote...");
+        SpotifyPlaybackDispatcher.connect(MainActivity.this, clientId, null);
     }
 
     @Override
@@ -148,15 +253,21 @@ public class MainActivity extends Activity implements AppLogger.Listener {
     }
 
     private void updateMasterSwitchUI(boolean enabled) {
-        if (masterSwitchTitle == null || masterSwitchSubtitle == null) return;
+        if (masterSwitchTitle == null || masterSwitchSubtitle == null || masterSwitchBadge == null || masterSwitchLayout == null) return;
         if (enabled) {
-            masterSwitchTitle.setText("Sync Engine: ACTIVE");
-            masterSwitchTitle.setTextColor(0xFF00E676);
-            masterSwitchSubtitle.setText("Listening to selected apps & syncing to Spotify");
+            masterSwitchLayout.setBackgroundResource(R.drawable.bg_m3_card_active);
+            masterSwitchBadge.setText("● ACTIVE");
+            masterSwitchBadge.setBackgroundResource(R.drawable.bg_m3_chip_active);
+            masterSwitchBadge.setTextColor(0xFF1DB954);
+            masterSwitchTitle.setText("Silent Sync Engine: Active");
+            masterSwitchSubtitle.setText("Listening to selected apps & syncing to Spotify in the background.");
         } else {
-            masterSwitchTitle.setText("Sync Engine: PAUSED (OFF)");
-            masterSwitchTitle.setTextColor(0xFFFF5252);
-            masterSwitchSubtitle.setText("Paused. All notifications will be ignored.");
+            masterSwitchLayout.setBackgroundResource(R.drawable.bg_m3_card);
+            masterSwitchBadge.setText("○ PAUSED");
+            masterSwitchBadge.setBackgroundResource(R.drawable.bg_m3_chip_inactive);
+            masterSwitchBadge.setTextColor(0xFFFF5252);
+            masterSwitchTitle.setText("Silent Sync Engine: Paused");
+            masterSwitchSubtitle.setText("Sync paused. Incoming notifications will be ignored.");
         }
     }
 
@@ -168,22 +279,21 @@ public class MainActivity extends Activity implements AppLogger.Listener {
 
     private void updateSourceAppsSummary() {
         if (selectedAppsStatusText == null) return;
-        java.util.Set<String> selected = AppPreferences.getSelectedPackages(this);
+        Set<String> selected = AppPreferences.getSelectedPackages(this);
         if (selected == null || selected.isEmpty()) {
-            selectedAppsStatusText.setText("No source apps selected. Notifications will not be intercepted.");
+            selectedAppsStatusText.setText("No source apps selected. Sync is paused.");
             selectedAppsStatusText.setTextColor(0xFFFFAB00);
             return;
         }
 
         android.content.pm.PackageManager pm = getPackageManager();
-        java.util.List<String> names = new java.util.ArrayList<>();
+        List<String> names = new ArrayList<>();
         for (String pkg : selected) {
             try {
                 android.content.pm.ApplicationInfo info = pm.getApplicationInfo(pkg, 0);
                 CharSequence label = pm.getApplicationLabel(info);
                 names.add((label != null) ? label.toString() : pkg);
             } catch (Exception e) {
-                // If app is uninstalled or not found by PM, use package name
                 if (pkg.contains(".")) {
                     names.add(pkg.substring(pkg.lastIndexOf('.') + 1));
                 } else {
@@ -192,9 +302,9 @@ public class MainActivity extends Activity implements AppLogger.Listener {
             }
         }
 
-        String preview = android.text.TextUtils.join(", ", names);
-        if (preview.length() > 60) {
-            preview = preview.substring(0, 57) + "...";
+        String preview = TextUtils.join(", ", names);
+        if (preview.length() > 50) {
+            preview = preview.substring(0, 47) + "...";
         }
         selectedAppsStatusText.setText("Syncing from " + selected.size() + " app" + (selected.size() == 1 ? "" : "s") + " (" + preview + ")");
         selectedAppsStatusText.setTextColor(0xFF00E676);
@@ -203,11 +313,11 @@ public class MainActivity extends Activity implements AppLogger.Listener {
     private void checkPermissions() {
         boolean enabled = isNotificationListenerEnabled();
         if (enabled) {
-            permissionStatusText.setText("● Notification Listener Active & Granted");
+            permissionStatusText.setText("● Granted & Active");
             permissionStatusText.setTextColor(0xFF00E676);
             btnGrantPermission.setVisibility(View.GONE);
         } else {
-            permissionStatusText.setText("▲ Notification Listener Access NOT Granted\nTap below to enable NotiSpoti in Android Settings.");
+            permissionStatusText.setText("▲ Action Required: Grant Access");
             permissionStatusText.setTextColor(0xFFFFAB00);
             btnGrantPermission.setVisibility(View.VISIBLE);
         }
@@ -270,13 +380,13 @@ public class MainActivity extends Activity implements AppLogger.Listener {
     @Override
     public void onStateUpdated(String song, String spotifyUri, String dispatchStatus) {
         if (detectedSongText != null && song != null) {
-            detectedSongText.setText("Song: " + song);
+            detectedSongText.setText(song);
         }
         if (spotifyMatchText != null && spotifyUri != null) {
             spotifyMatchText.setText("Spotify URI: " + spotifyUri);
         }
         if (dispatchStatusText != null && dispatchStatus != null) {
-            dispatchStatusText.setText("Spotify State: " + dispatchStatus);
+            dispatchStatusText.setText(dispatchStatus);
         }
     }
 
@@ -285,6 +395,15 @@ public class MainActivity extends Activity implements AppLogger.Listener {
         if (sdkStatusText != null) {
             sdkStatusText.setText(statusText);
             sdkStatusText.setTextColor(color);
+        }
+        if (btnQuickConnectSdk != null) {
+            if (statusText != null && statusText.contains("Connected")) {
+                btnQuickConnectSdk.setText("Connected ✓");
+                btnQuickConnectSdk.setEnabled(false);
+            } else {
+                btnQuickConnectSdk.setText("Connect");
+                btnQuickConnectSdk.setEnabled(true);
+            }
         }
     }
 }

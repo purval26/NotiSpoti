@@ -19,8 +19,8 @@
 
     <application
         android:label="NotiSpoti"
-        android:icon="@android:drawable/ic_media_play"
-        android:theme="@android:style/Theme.DeviceDefault"
+        android:icon="@drawable/ic_launcher"
+        android:theme="@style/Theme.NotiSpoti"
         android:usesCleartextTraffic="true">
 
         <activity

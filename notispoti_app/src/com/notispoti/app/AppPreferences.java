@@ -53,4 +53,16 @@ public class AppPreferences {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         prefs.edit().putBoolean(KEY_SYNC_ENABLED, enabled).apply();
     }
+
+    public static final String KEY_DEV_MODE = "developer_mode_enabled";
+
+    public static boolean isDeveloperMode(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return prefs.getBoolean(KEY_DEV_MODE, false);
+    }
+
+    public static void setDeveloperMode(Context context, boolean enabled) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        prefs.edit().putBoolean(KEY_DEV_MODE, enabled).apply();
+    }
 }

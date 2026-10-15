@@ -1,8 +1,11 @@
-# NotiSpoti 🎵
-
-> **Silent, automated background bridge that syncs music playing in YouTube Music, Obsidian, or local players to Spotify — keeping your Instagram Notes "Share from Spotify" updated in real time!**
+<div align="center">
+  <img src="app_icon.svg" width="128" height="128" alt="NotiSpoti App Icon" />
+  <h1>NotiSpoti</h1>
+  <p><strong>Silent, automated background bridge that syncs music playing in YouTube Music, Obsidian, or local players to Spotify — keeping your Instagram Notes "Share from Spotify" updated in real time!</strong></p>
+</div>
 
 [![Android](https://img.shields.io/badge/Platform-Android%208.0%2B%20(API%2026--34%2B)-green.svg)](https://developer.android.com)
+[![Material 3](https://img.shields.io/badge/Design-Material%203-1DB954.svg)](https://m3.material.io)
 [![Spotify](https://img.shields.io/badge/Spotify-Free%20%26%20Premium-1DB954.svg)](https://spotify.com)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/purval26/NotiSpoti?color=brightgreen)](https://github.com/purval26/NotiSpoti/releases)
@@ -25,6 +28,8 @@ If you listen to music on **YouTube Music**, **Obsidian audio**, **SoundCloud**,
 
 ## ✨ Features
 
+- 🎨 **Modern Material 3 UI**: Clean, rounded card layout designed for normal users with beautiful emerald accents, pill buttons, and responsive status chips.
+- 🛠️ **Collapsible Developer / Debug Mode**: Raw IPC logs, SHA-1 copy tools, and manual track tester are tucked neatly into an expandable developer tray, keeping the main interface clutter-free.
 - ⚡ **100% Silent & Headless Background Operation**: Uses the official Spotify App Remote SDK IPC. No UI popups, no screen theft, no foreground interruptions while browsing or reading.
 - 🆓 **Spotify Free Compatible**: Works with standard Free (non-premium) Spotify accounts as well as Premium.
 - 🎯 **Source App Whitelist**: Select specifically which apps NotiSpoti should listen to (pre-seeded with YouTube Music and Obsidian). Other media, social apps, and video players are completely ignored.

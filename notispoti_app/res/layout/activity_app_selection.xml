@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#121212"
-    android:padding="12dp">
+    android:padding="16dp">
 
     <!-- Top Navigation Bar -->
     <LinearLayout
@@ -12,54 +12,64 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="12dp">
 
         <Button
             android:id="@+id/btnBack"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="38dp"
             android:text="← Back"
+            android:textColor="#FFFFFF"
             android:textSize="12sp"
-            android:layout_marginRight="8dp" />
+            android:background="@drawable/bg_m3_pill_secondary"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:layout_marginRight="10dp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Select Source Apps"
-            android:textColor="#1DB954"
+            android:text="Source Apps"
+            android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold" />
 
         <Button
             android:id="@+id/btnSave"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="38dp"
             android:text="Save"
-            android:textSize="12sp" />
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:background="@drawable/bg_m3_pill_button"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp" />
     </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Only notifications from selected apps will be synced to Spotify."
-        android:textColor="#A0A0A0"
-        android:textSize="12sp"
-        android:layout_marginBottom="10dp" />
+        android:textColor="#8E8E93"
+        android:textSize="13sp"
+        android:layout_marginBottom="12dp" />
 
     <!-- Search Input -->
     <EditText
         android:id="@+id/inputSearchApp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#202020"
-        android:padding="10dp"
+        android:layout_height="46dp"
+        android:background="@drawable/bg_m3_input"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
         android:hint="Search installed apps..."
         android:textColor="#FFFFFF"
-        android:textColorHint="#777777"
+        android:textColorHint="#66726B"
         android:textSize="13sp"
         android:singleLine="true"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="10dp" />
 
     <!-- Action Toolbar (Defaults / Clear / Counter) -->
     <LinearLayout
@@ -67,23 +77,31 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="10dp">
 
         <Button
             android:id="@+id/btnResetDefaults"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="34dp"
             android:text="Reset Defaults"
+            android:textColor="#A3E7B2"
             android:textSize="11sp"
-            android:layout_marginRight="6dp" />
+            android:background="@drawable/bg_m3_pill_secondary"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:layout_marginRight="8dp" />
 
         <Button
             android:id="@+id/btnClearAll"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="34dp"
             android:text="Clear All"
+            android:textColor="#FF8A80"
             android:textSize="11sp"
-            android:layout_marginRight="6dp" />
+            android:background="@drawable/bg_m3_pill_secondary"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:layout_marginRight="8dp" />
 
         <TextView
             android:id="@+id/selectedCountText"
@@ -112,8 +130,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:divider="#262626"
-        android:dividerHeight="1dp"
+        android:divider="@null"
+        android:dividerHeight="0dp"
         android:choiceMode="none" />
 
 </LinearLayout>
